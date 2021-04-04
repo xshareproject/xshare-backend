@@ -12,7 +12,9 @@
             "": [
                 "node_modules/"
             ]
-        }
+        },
+        "strict": true,
+        "allowSyntheticDefaultImports": true,
     },
     "include": [
         "src/*/"

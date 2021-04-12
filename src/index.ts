@@ -1,22 +1,44 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import express from "express";
 dotenv.config();
 
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.wcu0n.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const MONGO_USER = process.env.MONGO_USER;
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
+const MONGO_DB = process.env.MONGO_DB;
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err: any) => {
+const uri = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.wcu0n.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
+
+const PORT = process.env.PORT || 9000;
+const app = express();
+
+mongoose.connect(
+  uri,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err: any) => {
     //   const collection = client.db("test").collection("devices");
-    //   perform actions on the collection object
     if (err) {
-        console.log("Error, not connected");
-        mongoose.connection.close().then((message: any) => {
+      console.log("Error, not connected");
+      mongoose.connection
+        .close()
+        .then((message: any) => {
           console.log("Closed:", message);
-        }).catch((message: any) => {
-            console.log("Error on close:", message);
+        })
+        .catch((message: any) => {
+          console.log("Error on close:", message);
         });
     } else {
-        console.log("Connected");
+      // perform actions on the collection object
+      console.log("Connected");
     }
-
     return;
+  }
+);
+
+app.get("/", (req, res) => {
+  res.send("Hello Share");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

@@ -1,5 +1,8 @@
 import { USER } from "../../models/User";
-import { CreateUserRequest, isUserRequestCorrect } from "../types/user_types";
+import {
+  CreateUserRequest,
+  isUserRequestCorrect,
+} from "../api/users/users.types.config";
 import { getSecretAndSalt } from "../service/authentication_service";
 
 export const createUser = async (data: any): Promise<string> => {

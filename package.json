@@ -4,7 +4,7 @@
   "description": "",
   "main": "out/src/index.js",
   "scripts": {
-    "start": "node .",
+    "start": "node --unhandled-rejections=strict .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "npm install && tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",

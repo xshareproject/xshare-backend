@@ -4,6 +4,7 @@ export interface CreateUserRequest {
   email: string;
   phoneNumber: string;
   password: string;
+  isContact?: boolean;
 }
 
 export const isUserRequestCorrect = (

@@ -9,7 +9,7 @@
     "prebuild": "npm install && tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "npm run build",
-    "dev": "concurrently \"tsc -w\" \"nodemon out/index.js\""
+    "dev": "concurrently \"tsc -w\" \"nodemon out/src/index.js\""
   },
   "repository": {
     "type": "git",

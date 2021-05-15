@@ -2,14 +2,14 @@
   "name": "xshare-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "out/index.js",
+  "main": "out/src/index.js",
   "scripts": {
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "npm install && tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "npm run build",
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
+    "dev": "concurrently \"tsc -w\" \"nodemon out/src/index.js\""
   },
   "repository": {
     "type": "git",
@@ -25,14 +25,17 @@
     "body-parser": "^1.19.0",
     "concurrently": "^6.0.0",
     "config": "^3.3.6",
+    "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "nodemon": "^2.0.7",
     "tslint": "^6.1.3",
     "typescript": "^4.2.3"
   },
   "devDependencies": {
-    "@types/express": "^4.17.11"
+    "@types/express": "^4.17.11",
+    "@types/jsonwebtoken": "^8.5.1"
   }
 }

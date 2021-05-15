@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import express from "express";
+import bodyParser from "body-parser";
 dotenv.config();
+// Import Routes
+import { userRoute } from "./api/user_api";
 
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
@@ -38,6 +41,10 @@ mongoose.connect(
 app.get("/", (req, res) => {
   res.send("Hello Share");
 });
+
+app.use(bodyParser.json());
+
+app.use("/user", userRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

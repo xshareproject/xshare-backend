@@ -6,7 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
+const body_parser_1 = __importDefault(require("body-parser"));
 dotenv_1.default.config();
+// Import Routes
+const user_api_1 = require("./api/user_api");
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 const MONGO_DB = process.env.MONGO_DB;
@@ -35,6 +38,8 @@ mongoose_1.default.connect(uri, { useNewUrlParser: true, useUnifiedTopology: tru
 app.get("/", (req, res) => {
     res.send("Hello Share");
 });
+app.use(body_parser_1.default.json());
+app.use("/user", user_api_1.userRoute);
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

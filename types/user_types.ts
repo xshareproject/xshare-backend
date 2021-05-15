@@ -12,7 +12,6 @@ export const isUserRequestCorrect = (
   const { firstName, lastName, email, phoneNumber, password } = userRequestBody;
 
   if (firstName && lastName && email && phoneNumber && password) {
-    // more correction checking etc.
     return true;
   }
 

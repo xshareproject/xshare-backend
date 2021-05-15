@@ -20,14 +20,12 @@ const userSchema: Schema = new Schema({
     unique: true,
   },
   secret: {
-    // idk if this is what is meant by "secret (hashed password)"
-    type: String, // or should I make a secret object that has the hash and salt fields?
+    type: String,
     required: true,
     unique: true,
   },
   salt: {
-    // idk if this is what is meant by "secret (hashed password)"
-    type: String, // or should I make a secret object that has the hash and salt fields?
+    type: String,
     required: true,
     unique: true,
   },
@@ -44,12 +42,4 @@ const userSchema: Schema = new Schema({
   },
 });
 
-// export interface User extends Document {
-//   UUID: String;
-//   firstName: String;
-//   lastName: String;
-//   email: String;
-//   phoneNumber: String;
-// }
-
-export const user = mongoose.model("Users", userSchema);
+export const USER = mongoose.model("Users", userSchema);

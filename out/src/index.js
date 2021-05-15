@@ -10,22 +10,30 @@ const body_parser_1 = __importDefault(require("body-parser"));
 dotenv_1.default.config();
 // Import Routes
 const user_api_1 = require("./api/user_api");
-const PORT = process.env.PORT || 9000;
-const app = express_1.default();
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 const MONGO_DB = process.env.MONGO_DB;
-const uri = `mongodb+srv://erica_db:ericaGhost246@cluster0.wcu0n.mongodb.net/erica_db?retryWrites=true&w=majority`;
-console.log(MONGO_DB, MONGO_PASSWORD, MONGO_USER, uri);
-mongoose_1.default.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, (err) => {
+const uri = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.wcu0n.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
+const PORT = process.env.PORT || 9000;
+const app = express_1.default();
+mongoose_1.default.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     //   const collection = client.db("test").collection("devices");
     if (err) {
         console.log("Error, not connected");
+        mongoose_1.default.connection
+            .close()
+            .then((message) => {
+            console.log("Closed:", message);
+        })
+            .catch((message) => {
+            console.log("Error on close:", message);
+        });
     }
     else {
         // perform actions on the collection object
         console.log("Connected");
     }
+    return;
 });
 app.get("/", (req, res) => {
     res.send("Hello Share");

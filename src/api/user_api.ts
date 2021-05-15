@@ -3,10 +3,6 @@ import { createUser } from "../db/user_db";
 
 const router = express.Router();
 
-// router.get("/", (req, res) => {
-//   res.send("This is the User Route");
-// });
-
 router.post("/", (req: express.Request, res: express.Response) => {
   createUser(req.body)
     .then((result: string) => {

@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.user = void 0;
+exports.USER = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const userSchema = new mongoose_1.Schema({
     firstName: {
@@ -41,13 +41,11 @@ const userSchema = new mongoose_1.Schema({
         unique: true,
     },
     secret: {
-        // idk if this is what is meant by "secret (hashed password)"
         type: String,
         required: true,
         unique: true,
     },
     salt: {
-        // idk if this is what is meant by "secret (hashed password)"
         type: String,
         required: true,
         unique: true,
@@ -64,12 +62,5 @@ const userSchema = new mongoose_1.Schema({
         default: false,
     },
 });
-// export interface User extends Document {
-//   UUID: String;
-//   firstName: String;
-//   lastName: String;
-//   email: String;
-//   phoneNumber: String;
-// }
-exports.user = mongoose_1.default.model("Users", userSchema);
+exports.USER = mongoose_1.default.model("Users", userSchema);
 //# sourceMappingURL=User.js.map

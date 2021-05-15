@@ -1,4 +1,4 @@
-import { user } from "../../models/User";
+import { USER } from "../../models/User";
 import {
   CreateUserRequest,
   isUserRequestCorrect,
@@ -14,7 +14,7 @@ export const createUser = async (data: any): Promise<string> => {
 
   const newUserSecretAndSalt = getSecretAndSalt(userData.password);
 
-  const newUser = new user({ ...userData, ...newUserSecretAndSalt });
+  const newUser = new USER({ ...userData, ...newUserSecretAndSalt });
 
   return newUser.save().then(() => {
     return "User created";

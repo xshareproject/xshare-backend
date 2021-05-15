@@ -2,7 +2,7 @@
   "name": "xshare-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "out/index.js",
+  "main": "out/src/index.js",
   "scripts": {
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",

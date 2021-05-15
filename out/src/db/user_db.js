@@ -18,8 +18,30 @@ const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
     if (!user_types_1.isUserRequestCorrect(userData)) {
         throw Error("User incorrect.");
     }
+    // USER.findOne({ email: userData.email })
+    //   .then((result) => {
+    //     if (result) {
+    //       throw Error("This email is already in use. Unable to create user)");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     throw Error("Unable to check if email exists: ${err}");
+    //   });
+    // USER.findOne(
+    //   { phoneNumber: userData.phoneNumber },
+    //   function (err: any, obj: any) {
+    //     if (err) {
+    //       throw Error("Unable to check if phone number exists.");
+    //     }
+    //     if (obj) {
+    //       throw Error(
+    //         "This phone number is already in use. Unable to create user."
+    //       );
+    //     }
+    //   }
+    // );
     const newUserSecretAndSalt = authentication_service_1.getSecretAndSalt(userData.password);
-    const newUser = new User_1.user(Object.assign(Object.assign({}, userData), newUserSecretAndSalt));
+    const newUser = new User_1.USER(Object.assign(Object.assign({}, userData), newUserSecretAndSalt));
     return newUser.save().then(() => {
         return "User created";
     });

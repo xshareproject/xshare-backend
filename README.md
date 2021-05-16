@@ -13,8 +13,14 @@ npm install
 - install Prettier vscode extension
 - use `npm run dev` to use `nodemon` to see changes
 - make sure to run `npm run build` before running the dev script
+
+- run script below for standard express server start
 ```
 npm start
+```
+OR
+- run script below to watch changes to `.ts` files within the repo (hot reload)
+```
 npm run dev
 ```
 

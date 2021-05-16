@@ -9,8 +9,16 @@ class UserService implements CRUD {
     return newUser.save();
   }
 
-  async getById(id: string) {
+  async getUserById(id: string) {
     return USER.findById(id);
+  }
+
+  async getUserByEmail(email: string) {
+    return USER.findOne({ email });
+  }
+
+  async getUserByPhoneNumber(phoneNumber: string) {
+    return USER.findOne({ phoneNumber });
   }
 }
 

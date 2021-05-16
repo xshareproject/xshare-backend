@@ -12,29 +12,25 @@ const userSchema: Schema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
   phoneNumber: {
     type: String,
     required: true,
-    unique: true,
   },
   secret: {
     type: String,
     required: true,
-    unique: true,
   },
   salt: {
     type: String,
     required: true,
-    unique: true,
   },
   lastUpdated: {
     type: Date,
     required: true,
     default: Date.now,
   },
-  UserUUIDs: [mongoose.Types.ObjectId],
+  UserUUIDs: [{ type: mongoose.Types.ObjectId }],
   isContact: {
     type: Boolean,
     required: true,

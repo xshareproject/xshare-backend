@@ -18,7 +18,7 @@ class UserController {
   async getUserGivenId(request: Request, response: Response) {
     const userId = request.params.id;
 
-    const user = userService.getById(userId);
+    const user = userService.getUserById(userId);
 
     response.status(STATUS_CODES.SUCCESS).send(user);
   }

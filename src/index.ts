@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import * as http from "http";
-import * as winston from "winston";
-import * as expressWinston from "express-winston";
 import cors from "cors";
 import debug from "debug";
 
@@ -39,21 +37,6 @@ mongoose.connect(
 app.use(express.json());
 
 app.use(cors());
-
-const loggerOptions: expressWinston.LoggerOptions = {
-  transports: [new winston.transports.Console()],
-  format: winston.format.combine(
-    winston.format.json(),
-    winston.format.prettyPrint(),
-    winston.format.colorize({ all: true })
-  ),
-};
-
-if (!process.env.DEBUG) {
-  loggerOptions.meta = false; // when not debugging, log requests as one-liners
-}
-
-app.use(expressWinston.logger(loggerOptions));
 
 routes.push(new UsersRoutes(app));
 

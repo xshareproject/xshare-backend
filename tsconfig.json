@@ -5,12 +5,13 @@
     "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "inlineSourceMap": true,
+    "strict": true,
     "outDir": "out",
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
     }
   },
-  "include": ["src/**/*", "models/**/*", "types/**/*"]
+  "include": ["src/**/*", "models/**/*", "src/types/**/*"]
 }

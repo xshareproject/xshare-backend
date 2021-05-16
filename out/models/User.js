@@ -33,29 +33,25 @@ const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
     },
     phoneNumber: {
         type: String,
         required: true,
-        unique: true,
     },
     secret: {
         type: String,
         required: true,
-        unique: true,
     },
     salt: {
         type: String,
         required: true,
-        unique: true,
     },
     lastUpdated: {
         type: Date,
         required: true,
-        default: Date.now,
+        default: Date.now, // In UTC date
     },
-    UserUUIDs: [mongoose_1.default.Types.ObjectId],
+    UserUUIDs: [{ type: mongoose_1.default.Types.ObjectId }],
     isContact: {
         type: Boolean,
         required: true,
@@ -63,4 +59,4 @@ const userSchema = new mongoose_1.Schema({
     },
 });
 exports.USER = mongoose_1.default.model("Users", userSchema);
-//# sourceMappingURL=User.js.map
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVXNlci5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL21vZGVscy9Vc2VyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQSxxREFBNEM7QUFFNUMsTUFBTSxVQUFVLEdBQVcsSUFBSSxpQkFBTSxDQUFDO0lBQ3BDLFNBQVMsRUFBRTtRQUNULElBQUksRUFBRSxNQUFNO1FBQ1osUUFBUSxFQUFFLElBQUk7S0FDZjtJQUNELFFBQVEsRUFBRTtRQUNSLElBQUksRUFBRSxNQUFNO1FBQ1osUUFBUSxFQUFFLElBQUk7S0FDZjtJQUNELEtBQUssRUFBRTtRQUNMLElBQUksRUFBRSxNQUFNO1FBQ1osUUFBUSxFQUFFLElBQUk7S0FDZjtJQUNELFdBQVcsRUFBRTtRQUNYLElBQUksRUFBRSxNQUFNO1FBQ1osUUFBUSxFQUFFLElBQUk7S0FDZjtJQUNELE1BQU0sRUFBRTtRQUNOLElBQUksRUFBRSxNQUFNO1FBQ1osUUFBUSxFQUFFLElBQUk7S0FDZjtJQUNELElBQUksRUFBRTtRQUNKLElBQUksRUFBRSxNQUFNO1FBQ1osUUFBUSxFQUFFLElBQUk7S0FDZjtJQUNELFdBQVcsRUFBRTtRQUNYLElBQUksRUFBRSxJQUFJO1FBQ1YsUUFBUSxFQUFFLElBQUk7UUFDZCxPQUFPLEVBQUUsSUFBSSxDQUFDLEdBQUcsRUFBRSxjQUFjO0tBQ2xDO0lBQ0QsU0FBUyxFQUFFLENBQUMsRUFBRSxJQUFJLEVBQUUsa0JBQVEsQ0FBQyxLQUFLLENBQUMsUUFBUSxFQUFFLENBQUM7SUFDOUMsU0FBUyxFQUFFO1FBQ1QsSUFBSSxFQUFFLE9BQU87UUFDYixRQUFRLEVBQUUsSUFBSTtRQUNkLE9BQU8sRUFBRSxLQUFLO0tBQ2Y7Q0FDRixDQUFDLENBQUM7QUFFVSxRQUFBLElBQUksR0FBRyxrQkFBUSxDQUFDLEtBQUssQ0FBQyxPQUFPLEVBQUUsVUFBVSxDQUFDLENBQUMifQ==

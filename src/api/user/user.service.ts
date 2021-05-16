@@ -1,15 +1,15 @@
-import { CreateUserRequest } from "../../common/types/users.types.config";
+import { CreateUserBody } from "../../common/types/users.types.config";
 import { CRUD } from "../../common/interfaces/crud.user.interface";
 import { USER } from "../../../models/User";
 
 class UserService implements CRUD {
-  async createUser(createUserRequest: CreateUserRequest) {
-    const newUser = new USER(createUserRequest);
+  async createUser(createUserBody: CreateUserBody) {
+    const newUser = new USER(createUserBody);
 
     return newUser.save();
   }
 
-  async getUserById(id: string) {
+  async getUserById(id?: string) {
     return USER.findById(id);
   }
 

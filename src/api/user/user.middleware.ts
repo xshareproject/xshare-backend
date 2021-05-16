@@ -3,7 +3,7 @@ import { STATUS_CODES } from "../../common/constants/response.status";
 import userService from "./user.service";
 
 class UserMiddleware {
-  async validateRequiredCreateUserBodyFields(
+  validateRequiredCreateUserBodyFields(
     request: Request,
     response: Response,
     next: NextFunction
@@ -26,7 +26,7 @@ class UserMiddleware {
     }
   }
 
-  async validateUserUniquenessByEmail(
+  async validateUserDoesNotExsitWithEmail(
     request: Request,
     response: Response,
     next: NextFunction
@@ -44,7 +44,7 @@ class UserMiddleware {
     }
   }
 
-  async validateUserUniquenessByPhoneNumber(
+  async validateUserDoesNotExsitWithPhoneNumber(
     request: Request,
     response: Response,
     next: NextFunction
@@ -62,14 +62,15 @@ class UserMiddleware {
     }
   }
 
-  async validateUserRequestUserId(
+  validateUserRequestUserId(
     request: Request,
     response: Response,
     next: NextFunction
   ) {
-    const body = request.params;
+    const query = request.query;
+    console.log(request.query);
 
-    if (body && body.id) {
+    if (query && query.id) {
       next();
     } else {
       response.status(STATUS_CODES.BAD_REQUEST).send({

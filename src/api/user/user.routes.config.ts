@@ -4,23 +4,20 @@ import { CommonRoutesConfig } from "../../common/common.routes.config";
 import UserController from "./user.controller";
 import UserMiddleware from "./user.middleware";
 
-export class UsersRoutes extends CommonRoutesConfig {
+export class UserRoutes extends CommonRoutesConfig {
   constructor(app: express.Application) {
-    super(app, "UsersRoutes");
+    super(app, "UserRoutes");
   }
 
-  configureRoutes(): express.Application {
+  configureRoutes() {
     this.app
-      .route("/users")
+      .route("/user")
       .post(
         UserMiddleware.validateRequiredCreateUserBodyFields,
-        UserMiddleware.validateUserUniquenessByEmail,
-        UserMiddleware.validateUserUniquenessByPhoneNumber,
+        UserMiddleware.validateUserDoesNotExsitWithEmail,
+        UserMiddleware.validateUserDoesNotExsitWithPhoneNumber,
         UserController.createUser
-      );
-
-    this.app
-      .route("/users/:id")
+      )
       .get(
         UserMiddleware.validateUserRequestUserId,
         UserController.getUserGivenId

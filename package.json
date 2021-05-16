@@ -7,7 +7,7 @@
     "start": "node --unhandled-rejections=strict .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "npm install && tslint -c tslint.json -p tsconfig.json --fix",
-    "build": "tsc",
+    "build": "rm -rf js/ && tsc",
     "prestart": "npm run build",
     "dev": "concurrently \"tsc -w\" \"nodemon out/src/index.js\""
   },

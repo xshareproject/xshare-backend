@@ -28,7 +28,7 @@ const userSchema: Schema = new Schema({
   lastUpdated: {
     type: Date,
     required: true,
-    default: Date.now,
+    default: Date.now, // In UTC date
   },
   UserUUIDs: [{ type: mongoose.Types.ObjectId }],
   isContact: {

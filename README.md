@@ -1,8 +1,7 @@
 # Project Dependancies
 
-- ExpressJS
+- Express TS
 - MongoDB
-- Docker
 - To install packages, run on top level folder:
 
 ```
@@ -13,6 +12,7 @@ npm install
 
 - install Prettier vscode extension
 - use `npm run dev` to use `nodemon` to see changes
+- make sure to run `npm run build` before running the dev script
 ```
 npm start
 npm run dev
@@ -36,5 +36,5 @@ MONGO_DB = <db name>
 1. declare and set PORT in .env file (default: 9000)
 
 ```
-PORT = 9000
+PORT = 3000
 ```

@@ -11,13 +11,17 @@ export class UserRoutes extends CommonRoutesConfig {
 
   configureRoutes() {
     this.app
-      .route("/user")
+      .route("/user/register")
       .post(
+        UserMiddleware.validateInitialRegisterRequest,
         UserMiddleware.validateRequiredCreateUserBodyFields,
         UserMiddleware.validateUserDoesNotExsitWithEmail,
         UserMiddleware.validateUserDoesNotExsitWithPhoneNumber,
         UserController.createUser
-      )
+      );
+
+    this.app
+      .route("/user")
       .get(
         UserMiddleware.validateUserRequestUserId,
         UserController.getUserGivenId

@@ -16,4 +16,5 @@ export interface CreateUserBody {
   isContact?: boolean;
   salt: string;
   secret: string;
+  publicKey: string;
 }

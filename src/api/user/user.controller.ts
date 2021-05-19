@@ -4,23 +4,47 @@ import {
   CreateUserRequest,
 } from "../../common/types/users.types.config";
 import userService from "./user.service";
+import encryptionService from "../../common/encryption/encryption.service";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import { getSecretAndSalt } from "../../service/authentication_service";
+import { PublicAndPrivateKeyPair } from "../../common/encryption/encryption.types";
+import { ServerPrivateKey } from "../../common/constants/server.env.vars";
 
 class UserController {
   async createUser(request: Request, response: Response) {
     const createUserRequest: CreateUserRequest = request.body;
+    const clientNoncePublicKey: string = request.body.noncePublicKey;
 
     const newUserSaltAndSecret = getSecretAndSalt(createUserRequest.password);
+
+    const publicAndPrivateKeyPair: PublicAndPrivateKeyPair =
+      encryptionService.getPublicAndPrivateKeyInHexFormat();
 
     const createUserBody: CreateUserBody = {
       ...createUserRequest,
       ...newUserSaltAndSecret,
+      ...{ publicKey: publicAndPrivateKeyPair.publicKey },
     };
 
-    const newUser = await userService.createUser(createUserBody);
+    const newUserRequest = userService.createUser(createUserBody);
 
-    response.status(STATUS_CODES.SUCCESS).send(newUser);
+    const encryptedUserKeysWithClientNoncePublicKey: string =
+      encryptionService.encryptMessageWithPublicKey(
+        JSON.stringify(publicAndPrivateKeyPair),
+        clientNoncePublicKey
+      );
+
+    const encryptedUserKeysWithServerPrivateKey: string =
+      encryptionService.encryptMessageWithPrivateKey(
+        encryptedUserKeysWithClientNoncePublicKey,
+        ServerPrivateKey!
+      );
+
+    newUserRequest.then(() => {
+      response
+        .status(STATUS_CODES.SUCCESS)
+        .send(encryptedUserKeysWithServerPrivateKey);
+    });
   }
 
   async getUserGivenId(request: Request, response: Response) {

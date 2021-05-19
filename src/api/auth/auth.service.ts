@@ -1,19 +1,28 @@
 import crypto from "crypto";
 import { USER } from "../../../models/User";
 import moment from "moment";
+import { Document } from "mongoose";
 
 const byteLength: number = 64;
 
 class AuthService {
-  generateSessionToken() {
+  generateSessionToken(): string {
     return crypto.randomBytes(byteLength).toString("hex");
   }
 
-  async storeSessionTokenAndExpiryDate(id: string, sessionToken: string) {
+  async storeSessionTokenAndExpiryDate(
+    id: string,
+    sessionToken: string
+  ): Promise<Document> {
     let expiryDate = moment().add(5, "minute").toDate();
-    return USER.findByIdAndUpdate(id, {
-      session: { token: sessionToken, expiryDate: expiryDate },
-    });
+
+    return USER.findByIdAndUpdate(
+      id,
+      {
+        session: { token: sessionToken, expiryDate: expiryDate },
+      },
+      { new: true }
+    );
   }
 }
 

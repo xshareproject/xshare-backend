@@ -16,7 +16,8 @@ class UserMiddleware {
       body.lastName &&
       body.email &&
       body.password &&
-      body.phoneNumber
+      body.phoneNumber &&
+      body.noncePublicKey
     ) {
       next();
     } else {
@@ -68,13 +69,30 @@ class UserMiddleware {
     next: NextFunction
   ) {
     const query = request.query;
-    console.log(request.query);
 
     if (query && query.id) {
       next();
     } else {
       response.status(STATUS_CODES.BAD_REQUEST).send({
         error: `Missing required user id.`,
+      });
+    }
+  }
+
+  validateInitialRegisterRequest(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const body = request.body;
+
+    if (body && body.encryptedCrendentialsAndPublicKeyNonce) {
+      // decrypt here; temporarily store the nonce public key in jwt
+      // request.body = decrypted credentials
+      next();
+    } else {
+      response.status(STATUS_CODES.BAD_REQUEST).send({
+        error: `Missing required field.`,
       });
     }
   }

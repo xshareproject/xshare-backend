@@ -20,6 +20,10 @@ class UserService implements CRUD {
   async getUserByPhoneNumber(phoneNumber: string) {
     return USER.findOne({ phoneNumber });
   }
+
+  async getUserByPublicKey(publicKey: string) {
+    return USER.findOne({ publicKey });
+  }
 }
 
 export default new UserService();

@@ -30,11 +30,39 @@ const userSchema: Schema = new Schema({
     required: true,
     default: Date.now, // In UTC date
   },
-  UserUUIDs: [{ type: mongoose.Types.ObjectId }],
+  userUUIDs: [{ type: mongoose.Types.ObjectId }],
   isContact: {
     type: Boolean,
     required: true,
     default: false,
+  },
+  session: {
+    token: {
+      type: String,
+      required: false,
+      default: null,
+    },
+    expiryDate: {
+      type: Date,
+      required: false,
+      default: null,
+    },
+  },
+  auth: {
+    token: {
+      type: String,
+      required: false,
+      default: null,
+    },
+    expiryDate: {
+      type: Date,
+      required: false,
+      default: null,
+    },
+  },
+  publicKey: {
+    type: String,
+    required: true,
   },
 });
 

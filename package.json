@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "out/src/index.js",
+  "type": "module",
   "scripts": {
     "start": "node --unhandled-rejections=strict .",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -26,7 +27,6 @@
     "concurrently": "^6.0.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

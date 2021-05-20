@@ -12,6 +12,8 @@ import { connectToMongoDatabase } from "./common/mongoose/mongoose.service";
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UserRoutes } from "./api/user/user.routes.config";
 
+import ens from "./common/encryption/encryption.service";
+
 dotenv.config();
 
 connectToMongoDatabase();
@@ -56,3 +58,5 @@ server.listen(PORT, () => {
 
   console.log(runningMessage);
 });
+
+console.log(ens.getPublicAndPrivateKeyInHexFormat());

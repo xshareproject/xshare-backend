@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODES } from "../../common/constants/response.status";
-import authService from "./auth.service";
 import userService from "../user/user.service";
 
 class AuthMiddleware {
@@ -40,8 +39,9 @@ class AuthMiddleware {
     }
   }
 
-  async validateClientPublicKeyIsAuthentic(
-    request: Request,
+
+ validateClientPublicKeyIsAuthentic(
+  est: Request,
     response: Response,
     next: NextFunction
   ) {

@@ -14,12 +14,12 @@ class AuthService {
     id: string,
     sessionToken: string
   ): Promise<Document> {
-    let expiryDate = moment().add(5, "minute").toDate();
+    const expiryDate = moment().add(5, "minute").toDate();
 
     return USER.findByIdAndUpdate(
       id,
       {
-        session: { token: sessionToken, expiryDate: expiryDate },
+        session: { token: sessionToken, expiryDate },
       },
       { new: true }
     );

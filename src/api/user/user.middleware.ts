@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import userService from "./user.service";
+import encryptionService from "../../common/encryption/encryption.service";
+import { serverPrivateKey } from "../../common/constants/server.env.vars";
 
 class UserMiddleware {
   validateRequiredCreateUserBodyFields(
@@ -87,8 +89,14 @@ class UserMiddleware {
     const body = request.body;
 
     if (body && body.encryptedCrendentialsAndPublicKeyNonce) {
-      // decrypt here; temporarily store the nonce public key in jwt
-      // request.body = decrypted credentials
+      const decryptedMessage: string =
+        encryptionService.decryptMessageWithPrivateKey(
+          body.encryptedCrendentialsAndPublicKeyNonce,
+          serverPrivateKey!
+        );
+      const decryptedBody: any = JSON.parse(decryptedMessage);
+
+      request.body = decryptedBody;
       next();
     } else {
       response.status(STATUS_CODES.BAD_REQUEST).send({

@@ -1,19 +1,36 @@
-import crypto, { KeyPairKeyObjectResult } from "crypto";
+const {
+  generateKeyPairSync,
+  privateDecrypt,
+  privateEncrypt,
+  publicDecrypt,
+  publicEncrypt,
+} = await import("crypto");
 import { PublicAndPrivateKeyPair } from "./encryption.types";
 
 class EncprytionService {
-  private generatePublicAndPrivateKeys(): KeyPairKeyObjectResult {
-    return crypto.generateKeyPairSync("rsa", { modulusLength: 64 });
+  private generatePublicAndPrivateKeys() {
+    const options: object = {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: "spki",
+        format: "pem",
+      },
+      privateKeyEncoding: {
+        type: "pkcs8",
+        format: "pem",
+        cipher: "aes-256-cbc",
+        passphrase: "top secret",
+      },
+    };
+
+    return generateKeyPairSync("x448", options);
   }
 
   getPublicAndPrivateKeyInHexFormat(): PublicAndPrivateKeyPair {
-    const publicAndPrivateKeyObject: KeyPairKeyObjectResult =
-      this.generatePublicAndPrivateKeys();
+    const publicAndPrivateKeyObject = this.generatePublicAndPrivateKeys();
 
-    const privateKeyBuffer: Buffer =
-      publicAndPrivateKeyObject.privateKey.export();
-    const publicKeyBuffer: Buffer =
-      publicAndPrivateKeyObject.publicKey.export();
+    const privateKeyBuffer = publicAndPrivateKeyObject.privateKey.export();
+    const publicKeyBuffer = publicAndPrivateKeyObject.publicKey.export();
 
     const publicAndPrivateKeyPair: PublicAndPrivateKeyPair = {
       publicKey: publicKeyBuffer.toString("hex"),
@@ -27,7 +44,7 @@ class EncprytionService {
     encryptedMessage: string,
     publicKey: string
   ): string {
-    const decryptedMessage: Buffer = crypto.publicDecrypt(
+    const decryptedMessage: Buffer = publicDecrypt(
       publicKey,
       Buffer.from(encryptedMessage)
     );
@@ -39,7 +56,7 @@ class EncprytionService {
     encryptedMessage: string,
     privateKey: string
   ): string {
-    const decryptedMessage: Buffer = crypto.privateDecrypt(
+    const decryptedMessage: Buffer = privateDecrypt(
       privateKey,
       Buffer.from(encryptedMessage)
     );
@@ -48,7 +65,7 @@ class EncprytionService {
   }
 
   encryptMessageWithPublicKey(message: string, publicKey: string): string {
-    const encryptedMessage: Buffer = crypto.publicEncrypt(
+    const encryptedMessage: Buffer = publicEncrypt(
       publicKey,
       Buffer.from(message)
     );
@@ -57,7 +74,7 @@ class EncprytionService {
   }
 
   encryptMessageWithPrivateKey(message: string, privateKey: string): string {
-    const encryptedMessage: Buffer = crypto.privateEncrypt(
+    const encryptedMessage: Buffer = privateEncrypt(
       privateKey,
       Buffer.from(message)
     );

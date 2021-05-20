@@ -1,40 +1,20 @@
-const {
-  generateKeyPairSync,
-  privateDecrypt,
-  privateEncrypt,
-  publicDecrypt,
-  publicEncrypt,
-} = await import("crypto");
+import RSA from "node-rsa";
 import { PublicAndPrivateKeyPair } from "./encryption.types";
 
 class EncprytionService {
-  private generatePublicAndPrivateKeys() {
-    const options: object = {
-      modulusLength: 4096,
-      publicKeyEncoding: {
-        type: "spki",
-        format: "pem",
-      },
-      privateKeyEncoding: {
-        type: "pkcs8",
-        format: "pem",
-        cipher: "aes-256-cbc",
-        passphrase: "top secret",
-      },
-    };
-
-    return generateKeyPairSync("x448", options);
+  private generatePublicAndPrivateKeys(): RSA {
+    return new RSA().generateKeyPair();
   }
 
   getPublicAndPrivateKeyInHexFormat(): PublicAndPrivateKeyPair {
-    const publicAndPrivateKeyObject = this.generatePublicAndPrivateKeys();
+    const generatedRSAKey: RSA = this.generatePublicAndPrivateKeys();
 
-    const privateKeyBuffer = publicAndPrivateKeyObject.privateKey.export();
-    const publicKeyBuffer = publicAndPrivateKeyObject.publicKey.export();
+    const privateKey = generatedRSAKey.exportKey("private");
+    const publicKey = generatedRSAKey.exportKey("public");
 
     const publicAndPrivateKeyPair: PublicAndPrivateKeyPair = {
-      publicKey: publicKeyBuffer.toString("hex"),
-      privateKey: privateKeyBuffer.toString("hex"),
+      publicKey,
+      privateKey,
     };
 
     return publicAndPrivateKeyPair;
@@ -44,10 +24,11 @@ class EncprytionService {
     encryptedMessage: string,
     publicKey: string
   ): string {
-    const decryptedMessage: Buffer = publicDecrypt(
-      publicKey,
-      Buffer.from(encryptedMessage)
-    );
+    const publicKeyRSA: RSA = new RSA();
+    publicKeyRSA.importKey(publicKey, "public");
+
+    const decryptedMessage: Buffer =
+      publicKeyRSA.decryptPublic(encryptedMessage);
 
     return decryptedMessage.toString();
   }
@@ -56,28 +37,28 @@ class EncprytionService {
     encryptedMessage: string,
     privateKey: string
   ): string {
-    const decryptedMessage: Buffer = privateDecrypt(
-      privateKey,
-      Buffer.from(encryptedMessage)
-    );
+    const privateKeyRSA: RSA = new RSA();
+    privateKeyRSA.importKey(privateKey, "private");
+
+    const decryptedMessage: Buffer = privateKeyRSA.decrypt(encryptedMessage);
 
     return decryptedMessage.toString();
   }
 
   encryptMessageWithPublicKey(message: string, publicKey: string): string {
-    const encryptedMessage: Buffer = publicEncrypt(
-      publicKey,
-      Buffer.from(message)
-    );
+    const publicKeyRSA: RSA = new RSA();
+    publicKeyRSA.importKey(publicKey, "public");
+
+    const encryptedMessage: Buffer = publicKeyRSA.encrypt(message);
 
     return encryptedMessage.toString();
   }
 
   encryptMessageWithPrivateKey(message: string, privateKey: string): string {
-    const encryptedMessage: Buffer = privateEncrypt(
-      privateKey,
-      Buffer.from(message)
-    );
+    const privateKeyRSA: RSA = new RSA();
+    privateKeyRSA.importKey(privateKey, "private");
+
+    const encryptedMessage: Buffer = privateKeyRSA.encryptPrivate(message);
 
     return encryptedMessage.toString();
   }

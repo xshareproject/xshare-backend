@@ -18,7 +18,7 @@ class UserController {
     const newUserSaltAndSecret = getSecretAndSalt(createUserRequest.password);
 
     const publicAndPrivateKeyPair: PublicAndPrivateKeyPair =
-      encryptionService.getPublicAndPrivateKeyInHexFormat();
+      encryptionService.getPublicAndPrivateKeyAsString();
 
     const createUserBody: CreateUserBody = {
       ...createUserRequest,
@@ -37,7 +37,7 @@ class UserController {
     const encryptedUserKeysWithServerPrivateKey: string =
       encryptionService.encryptMessageWithPrivateKey(
         encryptedUserKeysWithClientNoncePublicKey,
-        serverPrivateKey!
+        serverPrivateKey
       );
 
     newUserRequest

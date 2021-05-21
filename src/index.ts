@@ -11,8 +11,14 @@ import { connectToMongoDatabase } from "./common/mongoose/mongoose.service";
 
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UserRoutes } from "./api/user/user.routes.config";
+import {
+  serverPrivateKey,
+  serverPublicKey,
+} from "./common/constants/server.env.vars";
 
 dotenv.config();
+
+console.log(serverPrivateKey, serverPublicKey);
 
 connectToMongoDatabase();
 

@@ -92,7 +92,7 @@ class UserMiddleware {
       const decryptedMessage: string =
         encryptionService.decryptMessageWithPrivateKey(
           body.encryptedCrendentialsAndPublicKeyNonce,
-          serverPrivateKey!
+          serverPrivateKey
         );
       const decryptedBody: any = JSON.parse(decryptedMessage);
 

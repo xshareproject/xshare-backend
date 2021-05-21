@@ -6,7 +6,7 @@ class EncprytionService {
     return new RSA().generateKeyPair();
   }
 
-  getPublicAndPrivateKeyInHexFormat(): PublicAndPrivateKeyPair {
+  getPublicAndPrivateKeyAsString(): PublicAndPrivateKeyPair {
     const generatedRSAKey: RSA = this.generatePublicAndPrivateKeys();
 
     const privateKey = generatedRSAKey.exportKey("private");

@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
+import userService from "./user.service";
+import { STATUS_CODES } from "../../common/constants/response.status";
 import {
   CreateUserBody,
   CreateUserRequest,
+  UserDocument,
 } from "../../common/types/users.types.config";
-import userService from "./user.service";
-import encryptionService from "../../common/encryption/encryption.service";
-import { STATUS_CODES } from "../../common/constants/response.status";
 import { getSecretAndSalt } from "../../common/encryption/authentication_service";
 import { PublicAndPrivateKeyPair } from "../../common/encryption/encryption.types";
-import { serverPrivateKey } from "../../common/constants/server.env.vars";
+import encryptionService from "../../common/encryption/encryption.service";
 
 class UserController {
-  createUser(request: Request, response: Response) {
+  async createUser(request: Request, response: Response) {
     const createUserRequest: CreateUserRequest = request.body;
     const clientNoncePublicKey: string = request.body.noncePublicKey;
 
@@ -26,18 +26,18 @@ class UserController {
       ...{ publicKey: publicAndPrivateKeyPair.publicKey },
     };
 
-    const newUserRequest = userService.createUser(createUserBody);
+    const newUserRequest: Promise<UserDocument> =
+      userService.createUser(createUserBody);
 
     const encryptedUserKeysWithClientNoncePublicKey: string =
-      encryptionService.encryptMessageWithPublicKey(
+      encryptionService.encryptMessageGivenPublicKey(
         JSON.stringify(publicAndPrivateKeyPair),
         clientNoncePublicKey
       );
 
     const encryptedUserKeysWithServerPrivateKey: string =
-      encryptionService.encryptMessageWithPrivateKey(
-        encryptedUserKeysWithClientNoncePublicKey,
-        serverPrivateKey
+      encryptionService.encryptMessageWithServerPrivateKey(
+        encryptedUserKeysWithClientNoncePublicKey
       );
 
     newUserRequest

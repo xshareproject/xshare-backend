@@ -1,28 +1,30 @@
-import { Document } from "mongoose";
-import { CreateUserBody } from "../../common/types/users.types.config";
+import {
+  CreateUserBody,
+  UserDocument,
+} from "../../common/types/users.types.config";
 import { CRUD } from "../../common/interfaces/crud.user.interface";
 import { USER } from "../../../models/User";
 
 class UserService implements CRUD {
-  async createUser(createUserBody: CreateUserBody): Promise<Document> {
+  async createUser(createUserBody: CreateUserBody): Promise<UserDocument> {
     const newUser = new USER(createUserBody);
 
     return newUser.save();
   }
 
-  async getUserById(id?: string): Promise<Document> {
+  async getUserById(id?: string): Promise<UserDocument> {
     return USER.findById(id);
   }
 
-  async getUserByEmail(email: string): Promise<Document> {
+  async getUserByEmail(email: string): Promise<UserDocument> {
     return USER.findOne({ email });
   }
 
-  async getUserByPhoneNumber(phoneNumber: string): Promise<Document> {
+  async getUserByPhoneNumber(phoneNumber: string): Promise<UserDocument> {
     return USER.findOne({ phoneNumber });
   }
 
-  async getUserByPublicKey(publicKey: string): Promise<Document> {
+  async getUserByPublicKey(publicKey: string): Promise<UserDocument> {
     return USER.findOne({ publicKey });
   }
 }

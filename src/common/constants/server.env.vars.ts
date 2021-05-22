@@ -11,5 +11,5 @@ const privateKey = fs.readFileSync("./keys/private_key.pem", "utf8");
 rsaPublicKey.importKey(publicKey);
 rsaPrivateKey.importKey(privateKey);
 
-export const serverPublicKey = rsaPublicKey.exportKey("public");
-export const serverPrivateKey = rsaPrivateKey.exportKey("private");
+export const serverPublicKey = rsaPublicKey;
+export const serverPrivateKey = rsaPrivateKey;

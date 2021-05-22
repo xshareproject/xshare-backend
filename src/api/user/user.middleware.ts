@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import userService from "./user.service";
 import encryptionService from "../../common/encryption/encryption.service";
-import { serverPrivateKey } from "../../common/constants/server.env.vars";
 
 class UserMiddleware {
   validateRequiredCreateUserBodyFields(
@@ -89,11 +88,12 @@ class UserMiddleware {
     const body = request.body;
 
     if (body && body.encryptedCrendentialsAndPublicKeyNonce) {
+      console.log(body.encryptedCrendentialsAndPublicKeyNonce);
       const decryptedMessage: string =
-        encryptionService.decryptMessageWithPrivateKey(
-          body.encryptedCrendentialsAndPublicKeyNonce,
-          serverPrivateKey
+        encryptionService.decryptMessageWithServerPrivateKey(
+          body.encryptedCrendentialsAndPublicKeyNonce
         );
+      console.log(decryptedMessage);
       const decryptedBody: any = JSON.parse(decryptedMessage);
 
       request.body = decryptedBody;

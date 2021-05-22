@@ -1,5 +1,11 @@
 import RSA from "node-rsa";
 import { PublicAndPrivateKeyPair } from "./encryption.types";
+import {
+  serverPrivateKey,
+  serverPublicKey,
+} from "../constants/server.env.vars";
+import userService from "../../api/user/user.service";
+import { UserDocument } from "../types/users.types.config";
 
 class EncprytionService {
   private generatePublicAndPrivateKeys(): RSA {
@@ -20,47 +26,87 @@ class EncprytionService {
     return publicAndPrivateKeyPair;
   }
 
-  decryptMessageWithPublicKey(
+  decryptMessageWithSeverPublicKey(encryptedMessage: string): string {
+    const decryptedMessage: string = serverPublicKey.decryptPublic(
+      encryptedMessage,
+      "utf8"
+    );
+
+    return decryptedMessage;
+  }
+
+  decryptMessageWithServerPrivateKey(encryptedMessage: string): string {
+    const decryptedMessage: string = serverPrivateKey.decrypt(
+      encryptedMessage,
+      "utf8"
+    );
+
+    return decryptedMessage;
+  }
+
+  encryptMessageWithServerPublicKey(message: string): string {
+    const encryptedMessage: string = serverPublicKey.encrypt(message, "base64");
+
+    return encryptedMessage;
+  }
+
+  encryptMessageWithServerPrivateKey(message: string): string {
+    const encryptedMessage: string = serverPrivateKey.encryptPrivate(
+      message,
+      "base64"
+    );
+
+    return encryptedMessage;
+  }
+
+  async decryptMessageWithClientPublicKey(
     encryptedMessage: string,
-    publicKey: string
+    userId: string
+  ) {
+    const user: UserDocument = await userService.getUserById(userId);
+
+    const userPublicKey: string = user.publicKey;
+
+    const publicKey = new RSA();
+
+    publicKey.importKey(userPublicKey);
+
+    const decryptedMessage: string = publicKey.decryptPublic(
+      encryptedMessage,
+      "utf8"
+    );
+
+    return decryptedMessage;
+  }
+
+  async encryptMessageWithClientPublicKey(
+    message: string,
+    userId: string
+  ): Promise<string> {
+    const user: UserDocument = await userService.getUserById(userId);
+
+    const userPublicKey: string = user.publicKey;
+
+    const publicKey = new RSA();
+
+    publicKey.importKey(userPublicKey);
+
+    const encryptedMessage: string = publicKey.encrypt(message, "base64");
+
+    return encryptedMessage;
+  }
+
+  encryptMessageGivenPublicKey(
+    message: string,
+    publicKeyString: string
   ): string {
-    const publicKeyRSA: RSA = new RSA();
-    publicKeyRSA.importKey(publicKey, "public");
+    const publicKey = new RSA();
 
-    const decryptedMessage: Buffer =
-      publicKeyRSA.decryptPublic(encryptedMessage);
+    publicKey.importKey(publicKeyString);
 
-    return decryptedMessage.toString();
-  }
+    const encryptedMessage: string = publicKey.encrypt(message, "base64");
 
-  decryptMessageWithPrivateKey(
-    encryptedMessage: string,
-    privateKey: string
-  ): string {
-    const privateKeyRSA: RSA = new RSA();
-    privateKeyRSA.importKey(privateKey, "private");
-
-    const decryptedMessage: Buffer = privateKeyRSA.decrypt(encryptedMessage);
-
-    return decryptedMessage.toString();
-  }
-
-  encryptMessageWithPublicKey(message: string, publicKey: string): string {
-    const publicKeyRSA: RSA = new RSA();
-    publicKeyRSA.importKey(publicKey, "public");
-
-    const encryptedMessage: Buffer = publicKeyRSA.encrypt(message);
-
-    return encryptedMessage.toString();
-  }
-
-  encryptMessageWithPrivateKey(message: string, privateKey: string): string {
-    const privateKeyRSA: RSA = new RSA();
-    privateKeyRSA.importKey(privateKey, "private");
-
-    const encryptedMessage: Buffer = privateKeyRSA.encryptPrivate(message);
-
-    return encryptedMessage.toString();
+    return encryptedMessage;
   }
 }
 

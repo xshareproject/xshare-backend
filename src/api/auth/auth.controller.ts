@@ -3,29 +3,36 @@ import { ClientLoginRequest } from "../../common/types/auth.types.config";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import authService from "./auth.service";
 import userService from "../user/user.service";
-import mongoose from "mongoose";
+import { UserDocument } from "../../common/types/users.types.config";
+import encryptionService from "../../common/encryption/encryption.service";
 
 class AuthController {
   getSessionToken(request: Request, response: Response) {
     const clientLoginRequest: ClientLoginRequest = request.body;
-    const fetchUserRequest: Promise<any> = userService.getUserByPublicKey(
+    const fetchUserRequest = userService.getUserByPublicKey(
       clientLoginRequest.publicKey
     );
 
     const sessionToken: string = authService.generateSessionToken();
 
     fetchUserRequest
-      .then((user: mongoose.Document) => {
+      .then((user: UserDocument) => {
         const storeSessionTokenRequest: Promise<any> =
           authService.storeSessionTokenAndExpiryDate(user._id, sessionToken);
 
-        // encrypt here for now
+        const encryptedUserSessionToken: string =
+          encryptionService.encryptMessageWithServerPrivateKey(
+            encryptionService.encryptMessageGivenPublicKey(
+              sessionToken,
+              clientLoginRequest.publicKey
+            )
+          );
 
         storeSessionTokenRequest
-          .then((updatedUser: mongoose.Document) => {
+          .then(() => {
             response
               .status(STATUS_CODES.SUCCESS)
-              .send({ encryptedSessionToken: sessionToken });
+              .send({ encryptedSessionToken: encryptedUserSessionToken });
           })
           .catch((error) => console.log(error));
       })

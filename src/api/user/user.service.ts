@@ -27,6 +27,10 @@ class UserService implements CRUD {
   async getUserByPublicKey(publicKey: string): Promise<UserDocument> {
     return USER.findOne({ publicKey });
   }
+
+  async getUserBySessionToken(sessionToken: string): Promise<UserDocument> {
+    return USER.findOne({ session: { token: sessionToken } });
+  }
 }
 
 export default new UserService();

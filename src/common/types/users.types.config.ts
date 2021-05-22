@@ -31,6 +31,8 @@ export interface UserDocument extends Document {
   session: Token;
   auth: Token;
   publicKey: string;
+  salt: string;
+  secret: string;
 }
 
 interface Token {

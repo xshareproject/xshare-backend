@@ -11,6 +11,7 @@ import { connectToMongoDatabase } from "./common/mongoose/mongoose.service";
 
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UserRoutes } from "./api/user/user.routes.config";
+import { AuthRoutes } from "./api/auth/auth.routes.config";
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ if (!process.env.DEBUG) {
 app.use(expressWinston.logger(loggerOptions));
 
 routes.push(new UserRoutes(app));
+routes.push(new AuthRoutes(app));
 
 const runningMessage = `Server running on port: ${PORT}`;
 

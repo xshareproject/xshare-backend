@@ -15,9 +15,10 @@ export class AuthRoutes extends CommonRoutesConfig {
       .post(
         AuthMiddlware.validateRequestHasEncryptedPublicKey,
         AuthMiddlware.validateClientPublicKey,
-        AuthMiddlware.validateClientPublicKeyIsAuthentic,
         AuthController.getSessionToken
       );
+
+    this.app.route("/auth/credentials").post();
 
     return this.app;
   }

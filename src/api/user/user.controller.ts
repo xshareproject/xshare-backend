@@ -29,22 +29,17 @@ class UserController {
     const newUserRequest: Promise<UserDocument> =
       userService.createUser(createUserBody);
 
-    const encryptedUserKeysWithClientNoncePublicKey: string =
-      encryptionService.encryptMessageGivenPublicKey(
-        JSON.stringify(publicAndPrivateKeyPair),
-        clientNoncePublicKey
-      );
-
-    const encryptedUserKeysWithServerPrivateKey: string =
+    const encryptedUserKeys: string =
       encryptionService.encryptMessageWithServerPrivateKey(
-        encryptedUserKeysWithClientNoncePublicKey
+        encryptionService.encryptMessageGivenPublicKey(
+          JSON.stringify(publicAndPrivateKeyPair),
+          clientNoncePublicKey
+        )
       );
 
     newUserRequest
       .then(() => {
-        response
-          .status(STATUS_CODES.SUCCESS)
-          .send(encryptedUserKeysWithServerPrivateKey);
+        response.status(STATUS_CODES.SUCCESS).send(encryptedUserKeys);
       })
       .catch((error) => console.log(error));
   }

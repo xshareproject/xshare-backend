@@ -20,6 +20,8 @@ importedKey = fs.readFileSync("./keys/public_key.pem", "utf8");
 
 clientPublic.importKey(importedKey);
 
+let globalAuthToken;
+
 const getSessionToken = async () => {
   const body = { publicKey: importedKey };
 
@@ -61,7 +63,7 @@ const sendCredentials = async (sessionToken) => {
   };
 
   return axios
-    .post("http://localhost:3000/auth/credentials", {
+    .post("http://localhost:3000/auth/login", {
       encryptedCredentials: serverPublicKey.encrypt(
         JSON.stringify(body),
         "base64"
@@ -70,23 +72,44 @@ const sendCredentials = async (sessionToken) => {
     .then((response) => {
       console.log(response.data);
 
-      const body = response.data.encryptedSessionToken;
+      const body = response.data.encryptedAuthenticationToken;
 
       const serverDecrypt = serverPublicKey.decryptPublic(body, "utf8");
 
-      console.log(serverDecrypt);
+      const authToken = clientPrivate.decrypt(serverDecrypt, "utf8");
 
-      const sessionToken = clientPrivate.decrypt(serverDecrypt, "utf8");
+      console.log("authToken: ", authToken);
 
-      console.log("sessionToken: ", sessionToken);
+      return authToken;
+    })
+    .catch((error) => console.log(error));
+};
 
-      return sessionToken;
+const completeLogin = async (sessionToken) => {
+  return axios
+    .post("http://localhost:3000/auth/complete", {
+      encryptedSessionToken: serverPublicKey.encrypt(
+        JSON.stringify(sessionToken),
+        "base64"
+      ),
+    })
+    .then((response) => {
+      console.log(response.status);
+      console.log(response.data);
+
+      return;
     })
     .catch((error) => console.log(error));
 };
 
 const login = async () => {
   const newSessionToken = await getSessionToken();
+
+  const authToken = await sendCredentials(newSessionToken);
+
+  globalAuthToken = authToken;
+
+  const complete = await completeLogin(newSessionToken);
 };
 
 login();

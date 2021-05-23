@@ -29,7 +29,35 @@ class UserService implements CRUD {
   }
 
   async getUserBySessionToken(sessionToken: string): Promise<UserDocument> {
-    return USER.findOne({ session: { token: sessionToken } });
+    return USER.findOne({ "session.token": sessionToken });
+  }
+
+  async updateUserLoginSession(
+    id: string,
+    sessionToken: string | null,
+    expiryDate: Date | null
+  ): Promise<UserDocument> {
+    return USER.findByIdAndUpdate(
+      id,
+      {
+        session: { token: sessionToken, expiryDate },
+      },
+      { new: true }
+    );
+  }
+
+  async updateUserAuthenticationToken(
+    id: string,
+    sessionToken: string | null,
+    expiryDate: Date | null
+  ): Promise<UserDocument> {
+    return USER.findByIdAndUpdate(
+      id,
+      {
+        auth: { token: sessionToken, expiryDate },
+      },
+      { new: true }
+    );
   }
 }
 

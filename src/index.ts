@@ -47,10 +47,6 @@ routes.push(new AuthRoutes(app));
 
 const runningMessage = `Server running on port: ${PORT}`;
 
-app.get("/", (request: Request, response: Response) => {
-  response.status(200).send(runningMessage);
-});
-
 server.listen(PORT, () => {
   routes.forEach((route: CommonRoutesConfig) => {
     debugLog(`Routes configured for ${route.getName()}`);

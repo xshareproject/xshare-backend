@@ -6,7 +6,7 @@ import {
   CreateUserRequest,
   UserDocument,
 } from "../../common/types/users.types.config";
-import { getSecretAndSalt } from "../../common/encryption/authentication_service";
+import { getSecretAndSalt } from "../../common/encryption/authentication.service";
 import { PublicAndPrivateKeyPair } from "../../common/encryption/encryption.types";
 import encryptionService from "../../common/encryption/encryption.service";
 

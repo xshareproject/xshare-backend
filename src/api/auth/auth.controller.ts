@@ -24,7 +24,7 @@ class AuthController {
           encryptionService.encryptMessageWithServerPrivateKey(
             encryptionService.encryptMessageGivenPublicKey(
               sessionToken,
-              clientLoginRequest.publicKey
+              user.publicKey
             )
           );
 
@@ -35,6 +35,50 @@ class AuthController {
               .send({ encryptedSessionToken: encryptedUserSessionToken });
           })
           .catch((error) => console.log(error));
+      })
+      .catch((error) => console.log(error));
+  }
+
+  async getAuthenticationToken(request: Request, response: Response) {
+    const newAuthenticationToken = authService.generateAuthenticationToken();
+    const { userId } = request.body;
+
+    const storeAuthToken = authService.storeAuthenticationTokenAndExpiryDate(
+      userId,
+      newAuthenticationToken
+    );
+
+    const encryptedWithUserPublicKey =
+      await encryptionService.encryptMessageWithClientPublicKey(
+        newAuthenticationToken,
+        userId
+      );
+
+    const encryptedAuthenticationToken =
+      encryptionService.encryptMessageWithServerPrivateKey(
+        encryptedWithUserPublicKey
+      );
+
+    storeAuthToken
+      .then(() => {
+        response
+          .status(STATUS_CODES.SUCCESS)
+          .send({ encryptedAuthenticationToken });
+      })
+      .catch((error) => console.log(error));
+  }
+
+  async completeLoginSession(request: Request, response: Response) {
+    const { sessionToken } = request.body;
+
+    const user = await userService.getUserBySessionToken(sessionToken);
+
+    userService
+      .updateUserLoginSession(user._id, null, null)
+      .then(() => {
+        response
+          .status(STATUS_CODES.SUCCESS)
+          .send({ message: "Login Complete." });
       })
       .catch((error) => console.log(error));
   }

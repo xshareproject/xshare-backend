@@ -36,7 +36,6 @@ class AuthMiddlewareCredentials {
         userId: user._id,
         credentials: sessionTokenAndCredentials.credentials,
       };
-
       next();
     } else {
       response.status(STATUS_CODES.FORBIDDEN).send({

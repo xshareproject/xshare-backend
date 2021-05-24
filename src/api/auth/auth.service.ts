@@ -41,8 +41,9 @@ class AuthService {
 
     const currentDate = new Date();
     const sessionExpiryDate = user.session.expiryDate;
+    console.log(currentDate.toUTCString(), sessionExpiryDate);
 
-    return moment(currentDate.toUTCString()).isSameOrAfter(
+    return moment(currentDate.toUTCString()).isBefore(
       moment(sessionExpiryDate)
     );
   }

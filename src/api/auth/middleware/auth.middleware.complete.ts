@@ -14,7 +14,7 @@ class AuthMiddlewareComplete extends AuthMiddlewareCommon {
 
     const sessionToken = encryptionService
       .decryptMessageWithServerPrivateKey(body.encryptedSessionToken)
-      .split("\"")
+      .split('"')
       .join("");
 
     const user = await userService.getUserBySessionToken(sessionToken);

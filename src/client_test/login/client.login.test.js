@@ -33,13 +33,12 @@ const getSessionToken = async () => {
       ),
     })
     .then((response) => {
+      console.log(response.status);
       console.log(response.data);
 
       const body = response.data.encryptedSessionToken;
 
       const serverDecrypt = serverPublicKey.decryptPublic(body, "utf8");
-
-      console.log(serverDecrypt);
 
       const sessionToken = clientPrivate.decrypt(serverDecrypt, "utf8");
 
@@ -70,6 +69,7 @@ const sendCredentials = async (sessionToken) => {
       ),
     })
     .then((response) => {
+      console.log(response.status);
       console.log(response.data);
 
       const body = response.data.encryptedAuthenticationToken;

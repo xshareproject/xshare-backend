@@ -34,13 +34,15 @@ export class AuthRoutes extends CommonRoutesConfig {
       AuthController.getAuthenticationToken
     );
 
-    this.app
-      .route("/auth/complete")
-      .post((request: Request, response: Response, next: NextFunction) => {
+    this.app.route("/auth/complete").post(
+      (request: Request, response: Response, next: NextFunction) => {
         AuthMiddlewareComplete.validateRequiredFields(request, response, next, [
           "encryptedSessionToken",
         ]);
-      }, AuthMiddlewareComplete.validateSessionToken);
+      },
+      AuthMiddlewareComplete.validateSessionToken,
+      AuthController.completeLoginSession
+    );
 
     return this.app;
   }

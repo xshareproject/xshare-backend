@@ -1,24 +1,63 @@
-import { CreateUserBody } from "../../common/types/users.types.config";
+import {
+  CreateUserBody,
+  UserDocument,
+} from "../../common/types/users.types.config";
 import { CRUD } from "../../common/interfaces/crud.user.interface";
 import { USER } from "../../../models/User";
 
 class UserService implements CRUD {
-  async createUser(createUserBody: CreateUserBody) {
+  async createUser(createUserBody: CreateUserBody): Promise<UserDocument> {
     const newUser = new USER(createUserBody);
 
     return newUser.save();
   }
 
-  async getUserById(id?: string) {
+  async getUserById(id?: string): Promise<UserDocument> {
     return USER.findById(id);
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string): Promise<UserDocument> {
     return USER.findOne({ email });
   }
 
-  async getUserByPhoneNumber(phoneNumber: string) {
+  async getUserByPhoneNumber(phoneNumber: string): Promise<UserDocument> {
     return USER.findOne({ phoneNumber });
+  }
+
+  async getUserByPublicKey(publicKey: string): Promise<UserDocument> {
+    return USER.findOne({ publicKey });
+  }
+
+  async getUserBySessionToken(sessionToken: string): Promise<UserDocument> {
+    return USER.findOne({ "session.token": sessionToken });
+  }
+
+  async updateUserLoginSession(
+    id: string,
+    sessionToken: string | null,
+    expiryDate: Date | null
+  ): Promise<UserDocument> {
+    return USER.findByIdAndUpdate(
+      id,
+      {
+        session: { token: sessionToken, expiryDate },
+      },
+      { new: true }
+    );
+  }
+
+  async updateUserAuthenticationToken(
+    id: string,
+    sessionToken: string | null,
+    expiryDate: Date | null
+  ): Promise<UserDocument> {
+    return USER.findByIdAndUpdate(
+      id,
+      {
+        auth: { token: sessionToken, expiryDate },
+      },
+      { new: true }
+    );
   }
 }
 

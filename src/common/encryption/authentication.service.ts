@@ -35,3 +35,15 @@ export const getSecretAndSalt = (password: string) => {
     salt: generatedSalt,
   };
 };
+
+export const isUserPasswordValid = (
+  password: string,
+  salt: string,
+  secret: string
+) => {
+  const hashedSecret = crypto
+    .pbkdf2Sync(password, salt, iterations, keylen, digest)
+    .toString(format);
+
+  return secret === hashedSecret;
+};

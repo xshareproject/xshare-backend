@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import userService from "./user.service";
+import encryptionService from "../../common/encryption/encryption.service";
 
 class UserMiddleware {
   validateRequiredCreateUserBodyFields(
@@ -16,7 +17,8 @@ class UserMiddleware {
       body.lastName &&
       body.email &&
       body.password &&
-      body.phoneNumber
+      body.phoneNumber &&
+      body.noncePublicKey
     ) {
       next();
     } else {
@@ -68,13 +70,37 @@ class UserMiddleware {
     next: NextFunction
   ) {
     const query = request.query;
-    console.log(request.query);
 
     if (query && query.id) {
       next();
     } else {
       response.status(STATUS_CODES.BAD_REQUEST).send({
         error: `Missing required user id.`,
+      });
+    }
+  }
+
+  validateInitialRegisterRequest(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const body = request.body;
+
+    if (body && body.encryptedCrendentialsAndPublicKeyNonce) {
+      console.log(body.encryptedCrendentialsAndPublicKeyNonce);
+      const decryptedMessage: string =
+        encryptionService.decryptMessageWithServerPrivateKey(
+          body.encryptedCrendentialsAndPublicKeyNonce
+        );
+      console.log(decryptedMessage);
+      const decryptedBody: any = JSON.parse(decryptedMessage);
+
+      request.body = decryptedBody;
+      next();
+    } else {
+      response.status(STATUS_CODES.BAD_REQUEST).send({
+        error: `Missing required field.`,
       });
     }
   }

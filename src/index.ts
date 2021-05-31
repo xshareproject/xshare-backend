@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import express, { Request, Response } from "express";
+import express from "express";
 import * as http from "http";
 import cors from "cors";
 import debug from "debug";
@@ -11,6 +11,7 @@ import { connectToMongoDatabase } from "./common/mongoose/mongoose.service";
 
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UserRoutes } from "./api/user/user.routes.config";
+import { AuthRoutes } from "./api/auth/auth.routes.config";
 
 dotenv.config();
 
@@ -42,12 +43,9 @@ if (!process.env.DEBUG) {
 app.use(expressWinston.logger(loggerOptions));
 
 routes.push(new UserRoutes(app));
+routes.push(new AuthRoutes(app));
 
 const runningMessage = `Server running on port: ${PORT}`;
-
-app.get("/", (request: Request, response: Response) => {
-  response.status(200).send(runningMessage);
-});
 
 server.listen(PORT, () => {
   routes.forEach((route: CommonRoutesConfig) => {

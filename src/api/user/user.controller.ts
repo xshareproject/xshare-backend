@@ -1,26 +1,47 @@
 import { Request, Response } from "express";
+import userService from "./user.service";
+import { STATUS_CODES } from "../../common/constants/response.status";
 import {
   CreateUserBody,
   CreateUserRequest,
+  UserDocument,
 } from "../../common/types/users.types.config";
-import userService from "./user.service";
-import { STATUS_CODES } from "../../common/constants/response.status";
-import { getSecretAndSalt } from "../../service/authentication_service";
+import { getSecretAndSalt } from "../../common/encryption/authentication.service";
+import { PublicAndPrivateKeyPair } from "../../common/encryption/encryption.types";
+import encryptionService from "../../common/encryption/encryption.service";
 
 class UserController {
   async createUser(request: Request, response: Response) {
     const createUserRequest: CreateUserRequest = request.body;
+    const clientNoncePublicKey: string = request.body.noncePublicKey;
 
     const newUserSaltAndSecret = getSecretAndSalt(createUserRequest.password);
+
+    const publicAndPrivateKeyPair: PublicAndPrivateKeyPair =
+      encryptionService.getPublicAndPrivateKeyAsString();
 
     const createUserBody: CreateUserBody = {
       ...createUserRequest,
       ...newUserSaltAndSecret,
+      ...{ publicKey: publicAndPrivateKeyPair.publicKey },
     };
 
-    const newUser = await userService.createUser(createUserBody);
+    const newUserRequest: Promise<UserDocument> =
+      userService.createUser(createUserBody);
 
-    response.status(STATUS_CODES.SUCCESS).send(newUser);
+    const encryptedUserKeys: string =
+      encryptionService.encryptMessageWithServerPrivateKey(
+        encryptionService.encryptMessageGivenPublicKey(
+          JSON.stringify(publicAndPrivateKeyPair),
+          clientNoncePublicKey
+        )
+      );
+
+    newUserRequest
+      .then(() => {
+        response.status(STATUS_CODES.SUCCESS).send(encryptedUserKeys);
+      })
+      .catch((error) => console.log(error));
   }
 
   async getUserGivenId(request: Request, response: Response) {

@@ -1,42 +1,39 @@
 import { Request, Response } from "express";
 import { ClientLoginRequest } from "../../common/types/auth.types.config";
-import { STATUS_CODES } from "../../common/constants/response.status";
+import {
+  STATUS_CODES,
+  GENERIC_MESSAGES,
+} from "../../common/constants/response.status";
 import authService from "./auth.service";
 import userService from "../user/user.service";
-import { UserDocument } from "../../common/types/users.types.config";
-import encryptionService from "../../common/encryption/encryption.service";
 
 class AuthController {
-  getSessionToken(request: Request, response: Response) {
+  async getSessionToken(request: Request, response: Response) {
     const clientLoginRequest: ClientLoginRequest = request.body;
-    const fetchUserRequest = userService.getUserByPublicKey(
-      clientLoginRequest.publicKey
-    );
 
-    const sessionToken: string = authService.generateSessionToken();
+    try {
+      const user = await userService.getUserByPublicKey(
+        clientLoginRequest.publicKey
+      );
 
-    fetchUserRequest
-      .then((user: UserDocument) => {
-        const storeSessionTokenRequest: Promise<any> =
-          authService.storeSessionTokenAndExpiryDate(user._id, sessionToken);
+      const sessionToken: string = authService.generateSessionToken();
 
-        const encryptedUserSessionToken: string =
-          encryptionService.encryptMessageWithServerPrivateKey(
-            encryptionService.encryptMessageGivenPublicKey(
-              sessionToken,
-              user.publicKey
-            )
-          );
+      const storeSessionToken =
+        await authService.storeSessionTokenAndExpiryDate(
+          user._id,
+          sessionToken
+        );
 
-        storeSessionTokenRequest
-          .then(() => {
-            response
-              .status(STATUS_CODES.SUCCESS)
-              .send({ encryptedSessionToken: encryptedUserSessionToken });
-          })
-          .catch((error) => console.log(error));
-      })
-      .catch((error) => console.log(error));
+      if (!storeSessionToken) {
+        throw Error(GENERIC_MESSAGES.GENERIC_500);
+      }
+
+      response
+        .status(STATUS_CODES.SUCCESS)
+        .send({ sessionToken: sessionToken });
+    } catch (error) {
+      response.status(500).send({ error: error });
+    }
   }
 
   async getAuthenticationToken(request: Request, response: Response) {
@@ -48,24 +45,13 @@ class AuthController {
       newAuthenticationToken
     );
 
-    const encryptedWithUserPublicKey =
-      await encryptionService.encryptMessageWithClientPublicKey(
-        newAuthenticationToken,
-        userId
-      );
-
-    const encryptedAuthenticationToken =
-      encryptionService.encryptMessageWithServerPrivateKey(
-        encryptedWithUserPublicKey
-      );
-
     storeAuthToken
       .then(() => {
         response
           .status(STATUS_CODES.SUCCESS)
-          .send({ encryptedAuthenticationToken });
+          .send({ authToken: newAuthenticationToken });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => response.status(500).send({ error: error }));
   }
 
   async completeLoginSession(request: Request, response: Response) {
@@ -80,7 +66,7 @@ class AuthController {
           .status(STATUS_CODES.SUCCESS)
           .send({ message: "Login Complete." });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => response.status(500).send({ error: error }));
   }
 }
 

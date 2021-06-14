@@ -3,7 +3,7 @@ import {
   ClientLoginCredentials,
   ClientLoginEncryptedCredentials,
 } from "../../../common/types/auth.types.config";
-import encryptionService from "../../../common/encryption/encryption.service";
+import encryptionService from "../../../service/encryption/encryption.service";
 import authService from "../auth.service";
 import userService from "../../user/user.service";
 import { STATUS_CODES } from "../../../common/constants/response.status";

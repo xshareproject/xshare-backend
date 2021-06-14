@@ -3,9 +3,9 @@ import { PublicAndPrivateKeyPair } from "./encryption.types";
 import {
   serverPrivateKey,
   serverPublicKey,
-} from "../constants/server.env.vars";
+} from "../../common/constants/server.env.vars";
 import userService from "../../api/user/user.service";
-import { UserDocument } from "../types/users.types.config";
+import { UserDocument } from "../../common/types/users.types.config";
 
 class EncprytionService {
   private generatePublicAndPrivateKeys(): RSA {
@@ -18,12 +18,10 @@ class EncprytionService {
     const privateKey = generatedRSAKey.exportKey("private");
     const publicKey = generatedRSAKey.exportKey("public");
 
-    const publicAndPrivateKeyPair: PublicAndPrivateKeyPair = {
+    return {
       publicKey,
       privateKey,
     };
-
-    return publicAndPrivateKeyPair;
   }
 
   decryptMessageWithSeverPublicKey(encryptedMessage: string): string {

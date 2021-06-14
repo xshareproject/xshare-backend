@@ -13,7 +13,6 @@ export class UserRoutes extends CommonRoutesConfig {
     this.app
       .route("/user/register")
       .post(
-        UserMiddleware.validateInitialRegisterRequest,
         UserMiddleware.validateRequiredCreateUserBodyFields,
         UserMiddleware.validateUserDoesNotExsitWithEmail,
         UserMiddleware.validateUserDoesNotExsitWithPhoneNumber,

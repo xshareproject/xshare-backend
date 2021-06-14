@@ -6,14 +6,13 @@ import {
   CreateUserRequest,
   UserDocument,
 } from "../../common/types/users.types.config";
-import { getSecretAndSalt } from "../../common/encryption/authentication.service";
-import { PublicAndPrivateKeyPair } from "../../common/encryption/encryption.types";
-import encryptionService from "../../common/encryption/encryption.service";
+import { getSecretAndSalt } from "../../service/encryption/authentication.service";
+import { PublicAndPrivateKeyPair } from "../../service/encryption/encryption.types";
+import encryptionService from "../../service/encryption/encryption.service";
 
 class UserController {
   async createUser(request: Request, response: Response) {
     const createUserRequest: CreateUserRequest = request.body;
-    const clientNoncePublicKey: string = request.body.noncePublicKey;
 
     const newUserSaltAndSecret = getSecretAndSalt(createUserRequest.password);
 
@@ -26,20 +25,12 @@ class UserController {
       ...{ publicKey: publicAndPrivateKeyPair.publicKey },
     };
 
-    const newUserRequest: Promise<UserDocument> =
-      userService.createUser(createUserBody);
-
-    const encryptedUserKeys: string =
-      encryptionService.encryptMessageWithServerPrivateKey(
-        encryptionService.encryptMessageGivenPublicKey(
-          JSON.stringify(publicAndPrivateKeyPair),
-          clientNoncePublicKey
-        )
-      );
-
-    newUserRequest
+    userService
+      .createUser(createUserBody)
       .then(() => {
-        response.status(STATUS_CODES.SUCCESS).send(encryptedUserKeys);
+        response
+          .status(STATUS_CODES.SUCCESS)
+          .send({ publicAndPrivateKeyPair: publicAndPrivateKeyPair });
       })
       .catch((error) => console.log(error));
   }

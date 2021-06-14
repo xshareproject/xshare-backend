@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import userService from "../../user/user.service";
 import { STATUS_CODES } from "../../../common/constants/response.status";
-import encryptionService from "../../../common/encryption/encryption.service";
+import encryptionService from "../../../service/encryption/encryption.service";
 import { AuthMiddlewareCommon } from "./auth.middleware.common";
 
 class AuthMiddlewareComplete extends AuthMiddlewareCommon {

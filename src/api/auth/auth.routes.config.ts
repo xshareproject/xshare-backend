@@ -12,37 +12,16 @@ export class AuthRoutes extends CommonRoutesConfig {
   }
 
   configureRoutes() {
-    this.app.route("/auth/session").post(
-      (request: Request, response: Response, next: NextFunction) => {
-        AuthMiddlewareComplete.validateRequiredFields(request, response, next, [
-          "encryptedClientPublicKey",
-        ]);
-      },
-      AuthMiddlewareSession.validateRequestHasEncryptedPublicKey,
-      AuthMiddlewareSession.validateClientPublicKey,
-      AuthController.getSessionToken
-    );
+    this.app.route("/auth/session").post(AuthController.getSessionToken);
 
-    this.app.route("/auth/login").post(
-      (request: Request, response: Response, next: NextFunction) => {
-        AuthMiddlewareComplete.validateRequiredFields(request, response, next, [
-          "encryptedCredentials",
-        ]);
-      },
-      AuthMiddlewareCredentials.validateSessionToken,
-      AuthMiddlewareCredentials.validateCredentials,
-      AuthController.getAuthenticationToken
-    );
+    this.app
+      .route("/auth/login")
+      .post(
+        AuthMiddlewareCredentials.validateCredentials,
+        AuthController.getAuthenticationToken
+      );
 
-    this.app.route("/auth/complete").post(
-      (request: Request, response: Response, next: NextFunction) => {
-        AuthMiddlewareComplete.validateRequiredFields(request, response, next, [
-          "encryptedSessionToken",
-        ]);
-      },
-      AuthMiddlewareComplete.validateSessionToken,
-      AuthController.completeLoginSession
-    );
+    this.app.route("/auth/complete").post(AuthController.completeLoginSession);
 
     return this.app;
   }

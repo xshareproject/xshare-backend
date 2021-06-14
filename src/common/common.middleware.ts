@@ -13,6 +13,7 @@ class CommonMiddleware implements ICommonMiddleware {
     "/auth/login",
     "/auth/complete",
   ];
+
   private readonly sslKeyPath = "x-ssl-key";
   private readonly authTokenPath = "authorization";
 
@@ -43,7 +44,7 @@ class CommonMiddleware implements ICommonMiddleware {
   ) => {
     const authToken = request.headers[this.authTokenPath] as string;
 
-    if (this.isInWhitelistAuth(request.originalUrl)) {
+    if (this.isAllWhiteList(request.originalUrl)) {
       next();
       return;
     }
@@ -54,6 +55,10 @@ class CommonMiddleware implements ICommonMiddleware {
     }
 
     return response.status(403).send("Unauthorized.");
+  };
+
+  private isAllWhiteList = (path: string) => {
+    return this.isInWhitelistAuth(path) && this.isInWhitelist(path);
   };
 
   private isInWhitelistAuth = (path: string) => {

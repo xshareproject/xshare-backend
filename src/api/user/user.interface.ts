@@ -1,4 +1,3 @@
-import { Document } from "mongoose";
 import { CreateUserRequest } from "../../common/types/users.types.config";
 import { UserDocument } from "../../common/types/users.types.config";
 

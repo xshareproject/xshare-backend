@@ -1,10 +1,8 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 
 import { CommonRoutesConfig } from "../../common/common.routes.config";
 import AuthController from "./auth.controller";
-import AuthMiddlewareSession from "./middleware/auth.middleware.session";
 import AuthMiddlewareCredentials from "./middleware/auth.middleware.credentials";
-import AuthMiddlewareComplete from "./middleware/auth.middleware.complete";
 
 export class AuthRoutes extends CommonRoutesConfig {
   constructor(app: express.Application) {

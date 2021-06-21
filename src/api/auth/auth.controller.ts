@@ -30,9 +30,9 @@ class AuthController {
 
       response
         .status(STATUS_CODES.SUCCESS)
-        .send({ sessionToken: sessionToken });
+        .send({ sessionToken });
     } catch (error) {
-      response.status(500).send({ error: error });
+      response.status(500).send({ error });
     }
   }
 
@@ -51,7 +51,7 @@ class AuthController {
           .status(STATUS_CODES.SUCCESS)
           .send({ authToken: newAuthenticationToken });
       })
-      .catch((error) => response.status(500).send({ error: error }));
+      .catch((error) => response.status(500).send({ error }));
   }
 
   async completeLoginSession(request: Request, response: Response) {
@@ -66,7 +66,7 @@ class AuthController {
           .status(STATUS_CODES.SUCCESS)
           .send({ message: "Login Complete." });
       })
-      .catch((error) => response.status(500).send({ error: error }));
+      .catch((error) => response.status(500).send({ error }));
   }
 }
 

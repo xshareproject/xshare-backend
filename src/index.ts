@@ -21,7 +21,7 @@ connectToMongoDatabase();
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const routes: CommonRoutesConfig[] = [];
 const debugLog: debug.IDebugger = debug("app");
 

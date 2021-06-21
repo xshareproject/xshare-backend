@@ -31,11 +31,11 @@ class CommonMiddleware implements ICommonMiddleware {
     }
 
     return response.status(403).send("Incorrect SSL Key.");
-  };
+  }
 
   private isInWhitelist = (path: string) => {
     return this.whitelistEndpoints.includes(path);
-  };
+  }
 
   isValidAuthToken = (
     request: Request,
@@ -55,15 +55,15 @@ class CommonMiddleware implements ICommonMiddleware {
     }
 
     return response.status(403).send("Unauthorized.");
-  };
+  }
 
   private isAllWhiteList = (path: string) => {
     return this.isInWhitelistAuth(path) && this.isInWhitelist(path);
-  };
+  }
 
   private isInWhitelistAuth = (path: string) => {
     return this.whitelistEndpointsAuth.includes(path);
-  };
+  }
 }
 
 export default new CommonMiddleware();

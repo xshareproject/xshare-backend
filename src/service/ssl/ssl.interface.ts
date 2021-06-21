@@ -1,3 +1,3 @@
 export interface ISSL {
-  isValidSSLKey: (key: string) => boolean;
+  isValidSSLKey(key: string): boolean;
 }

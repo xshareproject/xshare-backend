@@ -4,7 +4,6 @@ import { STATUS_CODES } from "../../common/constants/response.status";
 import {
   CreateUserBody,
   CreateUserRequest,
-  UserDocument,
 } from "../../common/types/users.types.config";
 import { getSecretAndSalt } from "../../service/encryption/authentication.service";
 import { PublicAndPrivateKeyPair } from "../../service/encryption/encryption.types";
@@ -28,9 +27,7 @@ class UserController {
     userService
       .createUser(createUserBody)
       .then(() => {
-        response
-          .status(STATUS_CODES.SUCCESS)
-          .send({ publicAndPrivateKeyPair: publicAndPrivateKeyPair });
+        response.status(STATUS_CODES.SUCCESS).send({ publicAndPrivateKeyPair });
       })
       .catch((error) => console.log(error));
   }

@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import encryptionService from "../../../common/encryption/encryption.service";
+import encryptionService from "../../../service/encryption/encryption.service";
 import { STATUS_CODES } from "../../../common/constants/response.status";
 import userService from "../../user/user.service";
-import {
-  ClientLoginRequest,
-} from "../../../common/types/auth.types.config";
+import { ClientLoginRequest } from "../../../common/types/auth.types.config";
 
 class AuthMiddlewareSession {
   validateRequestHasEncryptedPublicKey(

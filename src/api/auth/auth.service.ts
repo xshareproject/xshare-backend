@@ -2,7 +2,7 @@ import crypto from "crypto";
 import moment from "moment";
 import { UserDocument } from "../../common/types/users.types.config";
 import { ClientLoginCredentials } from "../../common/types/auth.types.config";
-import { isUserPasswordValid } from "../../common/encryption/authentication.service";
+import { isUserPasswordValid } from "../../service/encryption/authentication.service";
 import userService from "../user/user.service";
 
 const byteLength: number = 64;
@@ -41,7 +41,6 @@ class AuthService {
 
     const currentDate = new Date();
     const sessionExpiryDate = user.session.expiryDate;
-    console.log(currentDate.toUTCString(), sessionExpiryDate);
 
     return moment(currentDate.toUTCString()).isBefore(
       moment(sessionExpiryDate)
@@ -54,6 +53,12 @@ class AuthService {
     const user = await userService.getUserByEmail(credentials.email);
 
     return isUserPasswordValid(credentials.password, user.salt, user.secret);
+  }
+
+  async isUserAuthorized(authToken: string): Promise<boolean> {
+    const user = await userService.getUserByAuthToken(authToken);
+
+    return userService.isAuthTokenActive(user);
   }
 }
 

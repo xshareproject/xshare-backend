@@ -2,37 +2,55 @@ import {
   CreateUserBody,
   UserDocument,
 } from "../../common/types/users.types.config";
-import { CRUD } from "../../common/interfaces/crud.user.interface";
+import { IUserService } from "./user.interface";
 import { USER } from "../../../models/User";
+import moment from "moment";
 
-class UserService implements CRUD {
-  async createUser(createUserBody: CreateUserBody): Promise<UserDocument> {
+class UserService implements IUserService {
+  public async createUser(
+    createUserBody: CreateUserBody
+  ): Promise<UserDocument> {
     const newUser = new USER(createUserBody);
 
     return newUser.save();
   }
 
-  async getUserById(id?: string): Promise<UserDocument> {
+  public async getUserById(id?: string): Promise<UserDocument> {
     return USER.findById(id);
   }
 
-  async getUserByEmail(email: string): Promise<UserDocument> {
+  public async getUserByEmail(email: string): Promise<UserDocument> {
     return USER.findOne({ email });
   }
 
-  async getUserByPhoneNumber(phoneNumber: string): Promise<UserDocument> {
+  public async getUserByPhoneNumber(
+    phoneNumber: string
+  ): Promise<UserDocument> {
     return USER.findOne({ phoneNumber });
   }
 
-  async getUserByPublicKey(publicKey: string): Promise<UserDocument> {
+  public async getUserByPublicKey(publicKey: string): Promise<UserDocument> {
     return USER.findOne({ publicKey });
   }
 
-  async getUserBySessionToken(sessionToken: string): Promise<UserDocument> {
+  public async getUserBySessionToken(
+    sessionToken: string
+  ): Promise<UserDocument> {
     return USER.findOne({ "session.token": sessionToken });
   }
 
-  async updateUserLoginSession(
+  public async getUserByAuthToken(authToken: string): Promise<UserDocument> {
+    return USER.findOne({ "auth.token": authToken });
+  }
+
+  public isAuthTokenActive(user: UserDocument): boolean {
+    const expiryDate = moment(new Date(user.auth.expiryDate).toISOString());
+    const currentMoment = moment();
+
+    return expiryDate.isBefore(currentMoment);
+  }
+
+  public async updateUserLoginSession(
     id: string,
     sessionToken: string | null,
     expiryDate: Date | null
@@ -46,15 +64,15 @@ class UserService implements CRUD {
     );
   }
 
-  async updateUserAuthenticationToken(
+  public async updateUserAuthenticationToken(
     id: string,
-    sessionToken: string | null,
+    authToken: string | null,
     expiryDate: Date | null
   ): Promise<UserDocument> {
     return USER.findByIdAndUpdate(
       id,
       {
-        auth: { token: sessionToken, expiryDate },
+        auth: { token: authToken, expiryDate },
       },
       { new: true }
     );

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import userService from "./user.service";
-import encryptionService from "../../common/encryption/encryption.service";
+import encryptionService from "../../service/encryption/encryption.service";
 
 class UserMiddleware {
   validateRequiredCreateUserBodyFields(
@@ -17,8 +17,7 @@ class UserMiddleware {
       body.lastName &&
       body.email &&
       body.password &&
-      body.phoneNumber &&
-      body.noncePublicKey
+      body.phoneNumber
     ) {
       next();
     } else {

@@ -1,9 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  ClientLoginCredentials,
-  ClientLoginEncryptedCredentials,
-} from "../../../common/types/auth.types.config";
-import encryptionService from "../../../common/encryption/encryption.service";
 import authService from "../auth.service";
 import userService from "../../user/user.service";
 import { STATUS_CODES } from "../../../common/constants/response.status";
@@ -16,25 +11,13 @@ class AuthMiddlewareCredentials {
   ) {
     const body = request.body;
 
-    const sessionTokenAndCredentials: ClientLoginEncryptedCredentials =
-      JSON.parse(
-        encryptionService.decryptMessageWithServerPrivateKey(
-          body.encryptedCredentials
-        )
-      );
-
-    if (
-      await authService.isUserSessionActive(
-        sessionTokenAndCredentials.sessionToken
-      )
-    ) {
-      const user = await userService.getUserBySessionToken(
-        sessionTokenAndCredentials.sessionToken
-      );
+    if (await authService.isUserSessionActive(body.sessionToken)) {
+      const user = await userService.getUserBySessionToken(body.sessionToken);
 
       request.body = {
         userId: user._id,
-        credentials: sessionTokenAndCredentials.credentials,
+        email: body.credentials.email,
+        password: body.credentials.password,
       };
       next();
     } else {
@@ -51,18 +34,10 @@ class AuthMiddlewareCredentials {
   ) {
     const body = request.body;
 
-    const decryptedCrendentials =
-      await encryptionService.decryptMessageWithClientPublicKey(
-        body.credentials,
-        body.userId
-      );
+    const user = await userService.getUserByEmail(body.email);
 
-    const userCrendentials: ClientLoginCredentials = JSON.parse(
-      decryptedCrendentials
-    );
-
-    if (await authService.isUserCredentialsValid(userCrendentials)) {
-      request.body = { userId: body.userId };
+    if (await authService.isUserCredentialsValid(body)) {
+      request.body = { userId: user._id };
       next();
     } else {
       response.status(STATUS_CODES.FORBIDDEN).send({

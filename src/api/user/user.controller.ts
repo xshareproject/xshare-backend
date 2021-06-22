@@ -29,7 +29,9 @@ class UserController {
       .then(() => {
         response.status(STATUS_CODES.SUCCESS).send({ publicAndPrivateKeyPair });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        response.status(STATUS_CODES.INTERNAL_SERVER_ERROR).send({ error });
+      });
   }
 
   async getUserGivenId(request: Request, response: Response) {

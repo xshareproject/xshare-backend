@@ -17,8 +17,7 @@ class UserMiddleware {
       body.lastName &&
       body.email &&
       body.password &&
-      body.phoneNumber &&
-      body.noncePublicKey
+      body.phoneNumber
     ) {
       next();
     } else {

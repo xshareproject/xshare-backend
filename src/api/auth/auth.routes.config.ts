@@ -15,6 +15,7 @@ export class AuthRoutes extends CommonRoutesConfig {
     this.app
       .route("/auth/login")
       .post(
+        AuthMiddlewareCredentials.validateSessionToken,
         AuthMiddlewareCredentials.validateCredentials,
         AuthController.getAuthenticationToken
       );

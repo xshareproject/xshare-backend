@@ -3,7 +3,7 @@ import moment from "moment";
 import { UserDocument } from "../../../models/user/user.type";
 import { CreateUserBody } from "../../common/types/users.types.config";
 import { IUserService } from "./user.interface";
-import { USER } from "../../../models/user/user.model";
+import USER from "../../../models/user/user.model";
 
 class UserService implements IUserService {
   public async createUser(

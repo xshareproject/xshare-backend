@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const shareSchema: Schema = new Schema({
+const shareSchema = new Schema({
   paymentIdentification: {
     type: String,
     required: true,

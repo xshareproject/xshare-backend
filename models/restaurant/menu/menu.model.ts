@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
-import MENU_SECTION from "./menu_section/menu.section.mode";
+import MENU_SECTION from "./menu_section/menu.section.model";
 
-const menuSchema: Schema = new Schema({
+const menuSchema = new Schema({
   numberOfMenuItems: {
     type: Number,
     required: true,

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const squareSchema: Schema = new Schema({
+const squareSchema = new Schema({
   paymentIdentification: {
     type: String,
     required: true,

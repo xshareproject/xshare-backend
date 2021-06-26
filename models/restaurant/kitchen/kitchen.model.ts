@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import ORDER from "../table/session/order/order.model";
 
-const kitchenSchema: Schema = new Schema({
+const kitchenSchema = new Schema({
   orders: [
     {
       type: mongoose.Types.ObjectId, // order id

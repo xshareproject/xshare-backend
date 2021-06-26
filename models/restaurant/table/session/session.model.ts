@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import CUSTOMER from "./customer/customer.model";
 import ORDER from "./order/order.model";
 
-const sessionSchema: Schema = new Schema({
+const sessionSchema = new Schema({
   customers: [
     {
       type: CUSTOMER,

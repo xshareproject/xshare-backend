@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const orderModel: Schema = new Schema({
+const orderModel = new Schema({
   menuItems: [
     {
       type: String, // menu item id

@@ -1,13 +1,13 @@
 import { Schema } from "mongoose";
-import SHARE_PAYMENT_SERVICE from "./share.model";
-import SQUARE_PAYMENT_SERVICE from "./square.model";
+import SHARE_PAYMENT_SERVICE from "./share/share.model";
+import SQUARE_PAYMENT_SERVICE from "./square/square.model";
 
 export enum PaymentType {
   share = "share",
   square = "square",
 }
 
-const paymentServiceSchema: Schema = new Schema({
+const paymentServiceSchema = new Schema({
   type: {
     type: PaymentType,
     required: true,

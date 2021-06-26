@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import USER from "../../../../user/user.model";
 
-const customerSchema: Schema = new Schema({
+const customerSchema = new Schema({
   fillerName: {
     type: String,
     required: true,

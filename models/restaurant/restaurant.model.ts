@@ -5,7 +5,7 @@ import SERVER from "./server/server.model";
 import TABLE from "./table/table.model";
 import PAYMENT_SERVICE from "../payment_service/payment.service.model";
 
-const restaurantSchema: Schema = new Schema({
+const restaurantSchema = new Schema({
   name: {
     type: String,
     required: true,

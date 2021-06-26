@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
-const menuItemSchema: Schema = new Schema({
+const menuItemSchema = new Schema({
   name: {
     type: String,
     required: true,

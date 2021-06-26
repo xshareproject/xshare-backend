@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import SESSION from "./session/session.model";
 
-const tableSchema: Schema = new Schema({
+const tableSchema = new Schema({
   QRCode: {
     type: String,
     required: true,

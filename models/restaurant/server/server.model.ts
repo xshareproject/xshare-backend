@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
-const serverSchema: Schema = new Schema({
+const serverSchema = new Schema({
   firstName: {
     type: String,
     required: true,

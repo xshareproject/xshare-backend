@@ -7,11 +7,19 @@ import { Table } from "./table/table.type";
 
 export interface Restaurant extends Document {
   name: string;
-  address: string;
+  address: Address;
   googleMapsAddressLink: string;
+  phoneNumber: String;
   tables: Table[];
   servers: Server[];
   menus: Menu[];
   kitchen: Kitchen[];
   paymentService: PaymentService;
+}
+
+export interface Address extends Document {
+  addressLineOne: string;
+  city: string;
+  province: string;
+  postalCode: string; // FORM: ABC123 (no space between)
 }

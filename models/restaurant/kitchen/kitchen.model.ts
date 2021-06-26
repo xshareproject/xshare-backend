@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import ORDER from "../table/session/order/order.model";
 
 const kitchenSchema = new Schema({
   orders: [

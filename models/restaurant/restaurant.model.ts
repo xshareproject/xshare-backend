@@ -5,19 +5,46 @@ import SERVER from "./server/server.model";
 import TABLE from "./table/table.model";
 import PAYMENT_SERVICE from "../payment_service/payment.service.model";
 
+const addressSchema = new Schema({
+  addressLineOne: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  province: {
+    type: String,
+    required: true,
+  },
+  postalCode: {
+    // FORM: ABC123 (no space between)
+    type: String,
+    required: true,
+  },
+});
+
+const ADDRESS = addressSchema;
+
 const restaurantSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   address: {
-    type: String,
+    type: ADDRESS,
     required: true,
   },
   googleMapsAddressLink: {
     type: String,
+    required: false,
+    default: null,
+  },
+  phoneNumber: {
+    type: String,
     required: true,
+    unique: true,
   },
   tables: [
     {
@@ -47,4 +74,6 @@ const restaurantSchema = new Schema({
   },
 });
 
-export const RESTAURANT = mongoose.model("Restaurant", restaurantSchema);
+const RESTAURANT = mongoose.model("Restaurant", restaurantSchema);
+
+export default RESTAURANT;

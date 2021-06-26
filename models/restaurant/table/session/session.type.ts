@@ -4,7 +4,8 @@ import { Order } from "./order/order.type";
 
 export interface Session extends Document {
   customers: Customer[];
-  currentOrder: Order[];
+  currentOrder: Order;
+  allOrders: Order[];
   payments: string[];
   dateCreate: Date;
 }

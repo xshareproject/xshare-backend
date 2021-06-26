@@ -13,6 +13,12 @@ const sessionSchema = new Schema({
     type: ORDER,
     required: true,
   },
+  allOrders: [
+    {
+      type: ORDER,
+      required: true,
+    },
+  ],
   payments: [
     {
       type: mongoose.Types.ObjectId, // payment id

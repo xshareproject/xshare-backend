@@ -13,7 +13,7 @@ export interface Restaurant extends Document {
   tables: Table[];
   servers: Server[];
   menus: Menu[];
-  kitchen: Kitchen[];
+  kitchen: Kitchen;
   paymentService: PaymentService;
 }
 

@@ -3,7 +3,7 @@ import { PublicAndPrivateKeyPair } from "./encryption.types";
 import {
   serverPrivateKey,
   serverPublicKey,
-} from "../../common/constants/server.env.vars";
+} from "../../common/constants/env.vars";
 import userService from "../../api/user/user.service";
 import { UserDocument } from "../../common/types/users.types.config";
 

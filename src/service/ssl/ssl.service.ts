@@ -1,5 +1,5 @@
 import { ISSL } from "./ssl.interface";
-import { sslKey } from "../../common/constants/server.env.vars";
+import { sslKey } from "../../common/constants/env.vars";
 
 class SSL implements ISSL {
   public isValidSSLKey(key: string) {

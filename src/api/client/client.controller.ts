@@ -1,17 +1,12 @@
 import { Request, Response } from "express";
-import {
-  serverPublicKey,
-  sslKey,
-} from "../../common/constants/server.env.vars";
+import { serverPublicKey, sslKey } from "../../common/constants/env.vars";
 
 class ClientController {
   getSSLKeyAndServerPublicKey(request: Request, response: Response) {
-    response
-      .status(200)
-      .send({
-        sslKey,
-        serverPublicKey: serverPublicKey.exportKey("public"),
-      });
+    response.status(200).send({
+      sslKey,
+      serverPublicKey: serverPublicKey.exportKey("public"),
+    });
   }
 }
 

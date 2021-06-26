@@ -1,7 +1,7 @@
 import crypto from "crypto";
+import { User } from "../../../models/user/user.type";
 import moment from "moment";
-import { UserDocument } from "../../common/types/users.types.config";
-import { ClientLoginCredentials } from "../../common/types/auth.types.config";
+import { ClientLoginCredentials } from "./auth.types.config";
 import { isUserPasswordValid } from "../../service/encryption/authentication.service";
 import userService from "../user/user.service";
 
@@ -19,7 +19,7 @@ class AuthService {
   async storeSessionTokenAndExpiryDate(
     id: string,
     sessionToken: string
-  ): Promise<UserDocument> {
+  ): Promise<User> {
     const expiryDate = moment().add(5, "minute").toDate();
 
     return userService.updateUserLoginSession(id, sessionToken, expiryDate);
@@ -28,16 +28,14 @@ class AuthService {
   async storeAuthenticationTokenAndExpiryDate(
     id: string,
     authToken: string
-  ): Promise<UserDocument> {
+  ): Promise<User> {
     const expiryDate = moment().add(15, "minute").toDate();
 
     return userService.updateUserAuthenticationToken(id, authToken, expiryDate);
   }
 
   async isUserSessionActive(sessionToken: string): Promise<boolean> {
-    const user: UserDocument = await userService.getUserBySessionToken(
-      sessionToken
-    );
+    const user = await userService.getUserBySessionToken(sessionToken);
 
     const currentDate = new Date();
     const sessionExpiryDate = user.session.expiryDate;

@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import userService from "./user.service";
 import { STATUS_CODES } from "../../common/constants/response.status";
-import {
-  CreateUserBody,
-  CreateUserRequest,
-} from "../../common/types/users.types.config";
+import { CreateUserBody, CreateUserRequest } from "./users.types.config";
 import { getSecretAndSalt } from "../../service/encryption/authentication.service";
 import { PublicAndPrivateKeyPair } from "../../service/encryption/encryption.types";
 import encryptionService from "../../service/encryption/encryption.service";

@@ -5,7 +5,6 @@ import {
   serverPublicKey,
 } from "../../common/constants/env.vars";
 import userService from "../../api/user/user.service";
-import { UserDocument } from "../../common/types/users.types.config";
 
 class EncprytionService {
   private generatePublicAndPrivateKeys(): RSA {
@@ -61,7 +60,7 @@ class EncprytionService {
     encryptedMessage: string,
     userId: string
   ) {
-    const user: UserDocument = await userService.getUserById(userId);
+    const user = await userService.getUserById(userId);
 
     const userPublicKey: string = user.publicKey;
 
@@ -81,7 +80,7 @@ class EncprytionService {
     message: string,
     userId: string
   ): Promise<string> {
-    const user: UserDocument = await userService.getUserById(userId);
+    const user = await userService.getUserById(userId);
 
     const userPublicKey: string = user.publicKey;
 

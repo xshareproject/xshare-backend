@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ClientLoginRequest } from "../../common/types/auth.types.config";
+import { ClientLoginRequest } from "./auth.types.config";
 import {
   STATUS_CODES,
   GENERIC_MESSAGES,
@@ -28,9 +28,7 @@ class AuthController {
         throw Error(GENERIC_MESSAGES.GENERIC_500);
       }
 
-      response
-        .status(STATUS_CODES.SUCCESS)
-        .send({ sessionToken });
+      response.status(STATUS_CODES.SUCCESS).send({ sessionToken });
     } catch (error) {
       response.status(500).send({ error });
     }

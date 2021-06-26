@@ -1,48 +1,42 @@
 import moment from "moment";
 
-import { UserDocument } from "../../../models/user/user.type";
+import { User } from "../../../models/user/user.type";
 import { CreateUserBody } from "../../common/types/users.types.config";
 import { IUserService } from "./user.interface";
 import USER from "../../../models/user/user.model";
 
 class UserService implements IUserService {
-  public async createUser(
-    createUserBody: CreateUserBody
-  ): Promise<UserDocument> {
+  public async createUser(createUserBody: CreateUserBody): Promise<User> {
     const newUser = new USER(createUserBody);
 
     return newUser.save();
   }
 
-  public async getUserById(id?: string): Promise<UserDocument> {
+  public async getUserById(id?: string): Promise<User> {
     return USER.findById(id);
   }
 
-  public async getUserByEmail(email: string): Promise<UserDocument> {
+  public async getUserByEmail(email: string): Promise<User> {
     return USER.findOne({ email });
   }
 
-  public async getUserByPhoneNumber(
-    phoneNumber: string
-  ): Promise<UserDocument> {
+  public async getUserByPhoneNumber(phoneNumber: string): Promise<User> {
     return USER.findOne({ phoneNumber });
   }
 
-  public async getUserByPublicKey(publicKey: string): Promise<UserDocument> {
+  public async getUserByPublicKey(publicKey: string): Promise<User> {
     return USER.findOne({ publicKey });
   }
 
-  public async getUserBySessionToken(
-    sessionToken: string
-  ): Promise<UserDocument> {
+  public async getUserBySessionToken(sessionToken: string): Promise<User> {
     return USER.findOne({ "session.token": sessionToken });
   }
 
-  public async getUserByAuthToken(authToken: string): Promise<UserDocument> {
+  public async getUserByAuthToken(authToken: string): Promise<User> {
     return USER.findOne({ "auth.token": authToken });
   }
 
-  public isAuthTokenActive(user: UserDocument): boolean {
+  public isAuthTokenActive(user: User): boolean {
     const expiryDate = moment(new Date(user.auth.expiryDate).toISOString());
     const currentMoment = moment();
 
@@ -53,7 +47,7 @@ class UserService implements IUserService {
     id: string,
     sessionToken: string | null,
     expiryDate: Date | null
-  ): Promise<UserDocument> {
+  ): Promise<User> {
     return USER.findByIdAndUpdate(
       id,
       {
@@ -67,7 +61,7 @@ class UserService implements IUserService {
     id: string,
     authToken: string | null,
     expiryDate: Date | null
-  ): Promise<UserDocument> {
+  ): Promise<User> {
     return USER.findByIdAndUpdate(
       id,
       {

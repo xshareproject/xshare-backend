@@ -1,4 +1,4 @@
-export interface UserDocument extends Document {
+export interface User extends Document {
   firstName: string;
   lastName: string;
   email: string;

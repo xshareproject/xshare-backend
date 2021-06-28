@@ -2,32 +2,69 @@ import express from "express";
 
 import { CommonRoutesConfig } from "../../common/common.routes.config";
 import RestaurantController from "./restaurant.controller";
+import RestaurantMiddleware from "./restaurant.middleware";
+
+export const RESTAURANT_BASE_PATH = "/restaurant";
+export const restaurantWithId = `${RESTAURANT_BASE_PATH}/:id`;
+
+export const PATHS = {
+  restaurantTables: `${restaurantWithId}/tables`,
+  restaurantSessions: `${restaurantWithId}/sessions`,
+  restaurantServers: `${restaurantWithId}/servers`,
+  restaurantKitchenOrders: `${restaurantWithId}/kitchen/orders`,
+};
 
 export class RestaurantRoutes extends CommonRoutesConfig {
-  private readonly restaurantWithId = "/restaurant/:id";
-  private readonly restaurant = "/restaurant";
-
   constructor(app: express.Application) {
     super(app, "RestaurantRoutes");
   }
 
   configureRoutes() {
-    this.app.route(this.restaurant).post(RestaurantController.createRestaurant);
     this.app
-      .route(`${this.restaurantWithId}`)
-      .get(RestaurantController.getRestaurant);
+      .route(RESTAURANT_BASE_PATH)
+      .post(
+        RestaurantMiddleware.validateBody,
+        RestaurantController.createRestaurant
+      );
+
     this.app
-      .route(`${this.restaurantWithId}/tables`)
-      .get(RestaurantController.getRestaurantTables);
-    this.app.route(`${this.restaurantWithId}/tables`).post();
+      .route(restaurantWithId)
+      .get(
+        RestaurantMiddleware.validateQueryParams,
+        RestaurantController.getRestaurant
+      );
+
     this.app
-      .route(`${this.restaurantWithId}/sessions`)
-      .get(RestaurantController.getRestaurantSessions);
-    this.app.route(`${this.restaurantWithId}/servers`).get();
-    this.app.route(`${this.restaurantWithId}/servers`).post();
+      .route(PATHS.restaurantTables)
+      .get(
+        RestaurantMiddleware.validateQueryParams,
+        RestaurantController.getRestaurantTables
+      );
+
+    this.app.route(PATHS.restaurantTables).post();
+
     this.app
-      .route(`${this.restaurantWithId}/kitchen/orders`)
-      .get(RestaurantController.getRestaurantKitchenOrders);
+      .route(PATHS.restaurantSessions)
+      .get(
+        RestaurantMiddleware.validateQueryParams,
+        RestaurantController.getRestaurantSessions
+      );
+
+    this.app
+      .route(PATHS.restaurantServers)
+      .get(
+        RestaurantMiddleware.validateQueryParams,
+        RestaurantController.getRestaurantServers
+      );
+
+    this.app.route(PATHS.restaurantServers).post();
+
+    this.app
+      .route(PATHS.restaurantKitchenOrders)
+      .get(
+        RestaurantMiddleware.validateQueryParams,
+        RestaurantController.getRestaurantKitchenOrders
+      );
 
     return this.app;
   }

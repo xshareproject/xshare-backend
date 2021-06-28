@@ -14,10 +14,12 @@ const tableSchema = new Schema({
       unique: true,
     },
   ],
-  server: {
-    type: mongoose.Types.ObjectId, // server id
-    required: true,
-  },
+  server: [
+    {
+      type: mongoose.Types.ObjectId, // server id
+      required: true,
+    },
+  ],
 });
 
 const TABLE = tableSchema;

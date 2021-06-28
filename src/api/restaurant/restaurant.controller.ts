@@ -31,6 +31,14 @@ class RestaurantController {
     response.status(200).send({ tables: restaurant.tables });
   }
 
+  async getRestaurantServers(request: Request, response: Response) {
+    const id = String(request.query.id);
+
+    const restaurant = await RestaurantService.fetchRestaurant(id);
+
+    response.status(200).send({ tables: restaurant.servers });
+  }
+
   async getRestaurantSessions(request: Request, response: Response) {
     const id = String(request.query.id);
 

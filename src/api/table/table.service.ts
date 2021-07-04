@@ -5,6 +5,7 @@ import RESTAURANT from "../../../models/restaurant/restaurant.model";
 import { Restaurant } from "../../../models/restaurant/restaurant.type";
 import TABLE from "../../../models/restaurant/table/table.model";
 import { CreateTable, CreateTables } from "./table.types.config";
+import { Table } from "../../../models/restaurant/table/table.type";
 
 class TableService {
   async createTablesForRestaurant(
@@ -43,6 +44,40 @@ class TableService {
 
   async generateQRCodeForTable(tableId: string): Promise<string> {
     return await qrcode.toDataURL(tableId);
+  }
+
+  async fetchTable(id: string): Promise<Table> {
+    return await TABLE.findById(id);
+  }
+
+  async addServersToTable(
+    tableId: string,
+    serverIds: string[]
+  ): Promise<number> {
+    const update: Table = await TABLE.findByIdAndUpdate(
+      tableId,
+      {
+        $push: { servers: { $each: serverIds } },
+      },
+      { new: true }
+    );
+
+    return serverIds.length;
+  }
+
+  async removeServersFromTable(
+    tableId: string,
+    serverIds: string[]
+  ): Promise<number> {
+    const update: Table = await TABLE.findByIdAndUpdate(
+      tableId,
+      {
+        $pull: { servers: { $each: serverIds } },
+      },
+      { new: true }
+    );
+
+    return serverIds.length;
   }
 }
 

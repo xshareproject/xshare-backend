@@ -35,24 +35,10 @@ export class RestaurantRoutes extends CommonRoutesConfig {
       );
 
     this.app
-      .route(PATHS.restaurantTables)
-      .get(
-        RestaurantMiddleware.isValidGetRestaurant,
-        RestaurantController.getRestaurantTables
-      );
-
-    this.app
-      .route(PATHS.restaurantTables)
-      .post(
-        RestaurantMiddleware.isValidGetRestaurant,
-        RestaurantMiddleware.isValidCreateTables
-      );
-
-    this.app
       .route(PATHS.restaurantSessions)
       .get(
         RestaurantMiddleware.isValidGetRestaurant,
-        RestaurantController.getRestaurantSessions
+        RestaurantController.getRestaurantMostRecentSessions
       );
 
     this.app

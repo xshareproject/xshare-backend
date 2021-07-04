@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
+
 import { Session } from "../../../models/restaurant/table/session/session.type";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import RestaurantService from "./restaurant.service";
-import { CreateRestaurant, CreateTables } from "./restaurant.types.config";
+import { CreateRestaurant } from "./restaurant.types.config";
 
 class RestaurantController {
   async createRestaurant(request: Request, response: Response) {
@@ -11,20 +12,8 @@ class RestaurantController {
     const newRestaurant = await RestaurantService.createRestaurant(body);
 
     response
-      .status(200)
+      .status(STATUS_CODES.SUCCESS)
       .send(`Created restaurant with id: ${newRestaurant._id}`);
-  }
-
-  async createRestaurantTables(request: Request, response: Response) {
-    const body: CreateTables = request.body;
-    const id = request.query.id as string;
-
-    const numberOfTablesAdded =
-      await RestaurantService.createTablesForRestaurant(id, body);
-
-    response
-      .status(200)
-      .send(`Created this many new tables: ${numberOfTablesAdded}`);
   }
 
   async getRestaurant(request: Request, response: Response) {
@@ -32,7 +21,7 @@ class RestaurantController {
 
     const restaurant = await RestaurantService.fetchRestaurant(id);
 
-    response.status(200).send({ restaurant });
+    response.status(STATUS_CODES.SUCCESS).send({ restaurant });
   }
 
   async getRestaurantTables(request: Request, response: Response) {
@@ -40,7 +29,7 @@ class RestaurantController {
 
     const restaurant = await RestaurantService.fetchRestaurant(id);
 
-    response.status(200).send({ tables: restaurant.tables });
+    response.status(STATUS_CODES.SUCCESS).send({ tables: restaurant.tables });
   }
 
   async getRestaurantServers(request: Request, response: Response) {
@@ -48,10 +37,10 @@ class RestaurantController {
 
     const restaurant = await RestaurantService.fetchRestaurant(id);
 
-    response.status(200).send({ tables: restaurant.servers });
+    response.status(STATUS_CODES.SUCCESS).send({ tables: restaurant.servers });
   }
 
-  async getRestaurantSessions(request: Request, response: Response) {
+  async getRestaurantMostRecentSessions(request: Request, response: Response) {
     const id = String(request.query.id);
 
     const restaurant = await RestaurantService.fetchRestaurant(id);
@@ -66,7 +55,7 @@ class RestaurantController {
       }
     });
 
-    response.status(200).send({ sessions });
+    response.status(STATUS_CODES.SUCCESS).send({ sessions });
   }
 
   async getRestaurantKitchenOrders(request: Request, response: Response) {
@@ -74,7 +63,9 @@ class RestaurantController {
 
     const restaurant = await RestaurantService.fetchRestaurant(id);
 
-    response.status(200).send({ orders: restaurant.kitchen.orders });
+    response
+      .status(STATUS_CODES.SUCCESS)
+      .send({ orders: restaurant.kitchen.orders });
   }
 }
 

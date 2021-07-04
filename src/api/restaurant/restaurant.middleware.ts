@@ -5,10 +5,13 @@ import {
   CreateAddress,
   CreateRestaurant,
   CreateServer,
-  CreateTables,
-  GetRestaurant,
+  PutServers,
 } from "./restaurant.types.config";
 import RestaurantService from "./restaurant.service";
+import {
+  GENERIC_MESSAGES,
+  STATUS_CODES,
+} from "../../common/constants/response.status";
 
 class RestaurantValidation {
   private readonly CREATE_RESTAURANT_PROPERTIES = [
@@ -28,66 +31,91 @@ class RestaurantValidation {
 
   private readonly SERVER_PROPERTIES = ["firstName", "lastName"];
 
-  private readonly TABLE_PROPERTIES = ["numberOfTables"];
-
   isValidCreateServers(
     request: Request,
     response: Response,
     next: NextFunction
-  ): boolean {
+  ) {
     const servers: CreateServer[] = request.body;
 
     let valid = true;
 
     servers.forEach((server) => {
-      valid = this.isValidPropertiesOfObject(
-        this.SERVER_PROPERTIES,
-        request.body
-      );
+      valid = this.isValidPropertiesOfObject(this.SERVER_PROPERTIES, server);
     });
 
-    return valid;
+    if (valid) {
+      next();
+    } else {
+      response
+        .status(STATUS_CODES.BAD_REQUEST)
+        .send({ error: GENERIC_MESSAGES.GENERIC_400 });
+    }
   }
 
   async isValidGetRestaurant(
     request: Request,
     response: Response,
     next: NextFunction
-  ): Promise<boolean> {
+  ) {
     const id = request.query.id as string;
 
     const restaurant = await RestaurantService.fetchRestaurant(id);
 
-    return !_.isNil(restaurant);
-  }
-
-  isValidCreateTables(
-    request: Request,
-    response: Response,
-    next: NextFunction
-  ): boolean {
-    const body: CreateTables = request.body;
-
-    let validTables = true;
-
-    body.tables.forEach((table) => {
-      validTables = !_.isNil(table) && !_.isNil(table.tableNumber);
-    });
-
-    return !_.isNil(body.tables) && validTables;
+    if (!_.isNil(restaurant)) {
+      next();
+    } else {
+      response
+        .status(STATUS_CODES.BAD_REQUEST)
+        .send({ error: GENERIC_MESSAGES.GENERIC_400 });
+    }
   }
 
   isValidCreateRestaurant(
     request: Request,
     response: Response,
     next: NextFunction
-  ): boolean {
-    const body = request.body;
+  ) {
+    const body: CreateRestaurant = request.body;
 
-    return (
+    if (
       this.isValidPropertiesOfObject(this.CREATE_RESTAURANT_PROPERTIES, body) &&
       this.isValidAddress(body.address)
-    );
+    ) {
+      next();
+    } else {
+      response
+        .status(STATUS_CODES.BAD_REQUEST)
+        .send({ error: GENERIC_MESSAGES.GENERIC_400 });
+    }
+  }
+
+  async areServersPartOfRestaurant(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) {
+    const body: PutServers = request.body;
+    const id = request.query.id as string;
+
+    const restaurant = await RestaurantService.fetchRestaurant(id);
+
+    let containsServers = true;
+
+    body.serverIds.forEach((serverId) => {
+      const containsServer =
+        restaurant.servers.filter((server) => server._id === serverId)
+          .length === 1;
+      containsServers = containsServer;
+    });
+
+    if (containsServers) {
+      next();
+    } else {
+      response
+        .status(STATUS_CODES.BAD_REQUEST)
+        .send({ error: GENERIC_MESSAGES.GENERIC_400 });
+    }
   }
 
   private isValidAddress(address: CreateAddress): boolean {

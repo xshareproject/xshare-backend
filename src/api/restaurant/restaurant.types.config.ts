@@ -15,19 +15,11 @@ export interface CreateAddress {
   postalCode: string; // FORM: ABC123 (no space between)
 }
 
-export interface GetRestaurant {
-  id: string;
-}
-
 export interface CreateServer {
   firstName: string;
   lastName: string;
 }
 
-export interface CreateTables {
-  tables: CreateTable[];
-}
-
-export interface CreateTable {
-  tableNumber: number;
+export interface PutServers {
+  serverIds: string[];
 }

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Session } from "../../../models/restaurant/table/session/session.type";
 import { STATUS_CODES } from "../../common/constants/response.status";
 import RestaurantService from "./restaurant.service";
-import { CreateRestaurant } from "./restaurant.types.config";
+import { CreateRestaurant, CreateTables } from "./restaurant.types.config";
 
 class RestaurantController {
   async createRestaurant(request: Request, response: Response) {
@@ -13,6 +13,18 @@ class RestaurantController {
     response
       .status(200)
       .send(`Created restaurant with id: ${newRestaurant._id}`);
+  }
+
+  async createRestaurantTables(request: Request, response: Response) {
+    const body: CreateTables = request.body;
+    const id = request.query.id as string;
+
+    const numberOfTablesAdded =
+      await RestaurantService.createTablesForRestaurant(id, body);
+
+    response
+      .status(200)
+      .send(`Created this many new tables: ${numberOfTablesAdded}`);
   }
 
   async getRestaurant(request: Request, response: Response) {

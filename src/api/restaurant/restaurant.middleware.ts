@@ -1,58 +1,111 @@
+import _ from "lodash";
 import { Request, Response, NextFunction } from "express";
-import { GENERIC_MESSAGES } from "../../common/constants/response.status";
-import { METHODS } from "../../common/constants/request.methods";
 
 import {
-  PATHS,
-  RESTAURANT_BASE_PATH,
-  restaurantWithId,
-} from "./restaurant.routes.config";
-import RestaurantValidation from "./restaurant.validation";
-class RestaurantMiddleware {
-  async validateBody(request: Request, response: Response, next: NextFunction) {
-    const { path, method, body } = request;
+  CreateAddress,
+  CreateRestaurant,
+  CreateServer,
+  CreateTables,
+  GetRestaurant,
+} from "./restaurant.types.config";
+import RestaurantService from "./restaurant.service";
 
-    if (await this.validate(path, method, body)) {
-      next();
-    } else {
-      response.status(400).send({ error: GENERIC_MESSAGES.GENERIC_400 });
-    }
-  }
+class RestaurantValidation {
+  private readonly CREATE_RESTAURANT_PROPERTIES = [
+    "name",
+    "address",
+    "googleMapsAddressLink",
+    "phoneNumber",
+    "paymentType",
+  ];
 
-  async validateQueryParams(
+  private readonly ADDRESS_PROPERTIES = [
+    "addressLineOne",
+    "city",
+    "province",
+    "postalCode",
+  ];
+
+  private readonly SERVER_PROPERTIES = ["firstName", "lastName"];
+
+  private readonly TABLE_PROPERTIES = ["numberOfTables"];
+
+  isValidCreateServers(
     request: Request,
     response: Response,
     next: NextFunction
-  ) {
-    const { path, method, query } = request;
+  ): boolean {
+    const servers: CreateServer[] = request.body;
 
-    if (await this.validate(path, method, query)) {
-      next();
-    } else {
-      response.status(400).send({ error: GENERIC_MESSAGES.GENERIC_400 });
-    }
+    let valid = true;
+
+    servers.forEach((server) => {
+      valid = this.isValidPropertiesOfObject(
+        this.SERVER_PROPERTIES,
+        request.body
+      );
+    });
+
+    return valid;
   }
 
-  private async validate(
-    path: string,
-    method: string,
-    bodyOrParams: any
+  async isValidGetRestaurant(
+    request: Request,
+    response: Response,
+    next: NextFunction
   ): Promise<boolean> {
-    const key = this.createMethodAndPathKey(path, method);
+    const id = request.query.id as string;
 
-    switch (key) {
-      case `${METHODS.POST}_(${RESTAURANT_BASE_PATH})`:
-        return RestaurantValidation.validateCreateRestaurant(bodyOrParams);
-      case `${METHODS.GET}_(${RESTAURANT_BASE_PATH})`:
-        return await RestaurantValidation.validateGetRestaurant(bodyOrParams);
-      default:
-        return false;
-    }
+    const restaurant = await RestaurantService.fetchRestaurant(id);
+
+    return !_.isNil(restaurant);
   }
 
-  private createMethodAndPathKey(path: string, method: string): string {
-    return `${method}_(${path})`;
+  isValidCreateTables(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): boolean {
+    const body: CreateTables = request.body;
+
+    let validTables = true;
+
+    body.tables.forEach((table) => {
+      validTables = !_.isNil(table) && !_.isNil(table.tableNumber);
+    });
+
+    return !_.isNil(body.tables) && validTables;
+  }
+
+  isValidCreateRestaurant(
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): boolean {
+    const body = request.body;
+
+    return (
+      this.isValidPropertiesOfObject(this.CREATE_RESTAURANT_PROPERTIES, body) &&
+      this.isValidAddress(body.address)
+    );
+  }
+
+  private isValidAddress(address: CreateAddress): boolean {
+    return this.isValidPropertiesOfObject(this.ADDRESS_PROPERTIES, address);
+  }
+
+  private isValidPropertiesOfObject(
+    properties: string[],
+    object: any
+  ): boolean {
+    let isValid = true;
+
+    properties.forEach((property) => {
+      isValid = !_.isNil(object[property]);
+    });
+
+    return isValid;
   }
 }
 
-export default new RestaurantMiddleware();
+export default new RestaurantValidation();

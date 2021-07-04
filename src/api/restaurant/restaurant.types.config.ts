@@ -18,3 +18,16 @@ export interface CreateAddress {
 export interface GetRestaurant {
   id: string;
 }
+
+export interface CreateServer {
+  firstName: string;
+  lastName: string;
+}
+
+export interface CreateTables {
+  tables: CreateTable[];
+}
+
+export interface CreateTable {
+  tableNumber: number;
+}

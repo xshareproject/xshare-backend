@@ -3,6 +3,8 @@ import { Session } from "./session/session.type";
 
 export interface Table extends Document {
   QRCode: string;
+  tableId: string;
+  tableNumber: number;
   sessions: Session[];
-  server: string[];
+  servers: string[];
 }

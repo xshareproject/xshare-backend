@@ -23,46 +23,53 @@ export class RestaurantRoutes extends CommonRoutesConfig {
     this.app
       .route(RESTAURANT_BASE_PATH)
       .post(
-        RestaurantMiddleware.validateBody,
+        RestaurantMiddleware.isValidCreateRestaurant,
         RestaurantController.createRestaurant
       );
 
     this.app
       .route(restaurantWithId)
       .get(
-        RestaurantMiddleware.validateQueryParams,
+        RestaurantMiddleware.isValidGetRestaurant,
         RestaurantController.getRestaurant
       );
 
     this.app
       .route(PATHS.restaurantTables)
       .get(
-        RestaurantMiddleware.validateQueryParams,
+        RestaurantMiddleware.isValidGetRestaurant,
         RestaurantController.getRestaurantTables
       );
 
-    this.app.route(PATHS.restaurantTables).post();
+    this.app
+      .route(PATHS.restaurantTables)
+      .post(
+        RestaurantMiddleware.isValidGetRestaurant,
+        RestaurantMiddleware.isValidCreateTables
+      );
 
     this.app
       .route(PATHS.restaurantSessions)
       .get(
-        RestaurantMiddleware.validateQueryParams,
+        RestaurantMiddleware.isValidGetRestaurant,
         RestaurantController.getRestaurantSessions
       );
 
     this.app
       .route(PATHS.restaurantServers)
       .get(
-        RestaurantMiddleware.validateQueryParams,
+        RestaurantMiddleware.isValidGetRestaurant,
         RestaurantController.getRestaurantServers
       );
 
-    this.app.route(PATHS.restaurantServers).post();
+    this.app
+      .route(PATHS.restaurantServers)
+      .post(RestaurantMiddleware.isValidCreateServers);
 
     this.app
       .route(PATHS.restaurantKitchenOrders)
       .get(
-        RestaurantMiddleware.validateQueryParams,
+        RestaurantMiddleware.isValidGetRestaurant,
         RestaurantController.getRestaurantKitchenOrders
       );
 

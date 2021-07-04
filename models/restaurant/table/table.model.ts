@@ -7,6 +7,15 @@ const tableSchema = new Schema({
     required: true,
     unique: true,
   },
+  tableId: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+    unique: true,
+  },
+  tableNumber: {
+    type: Number,
+    required: true,
+  },
   sessions: [
     {
       type: SESSION,
@@ -14,7 +23,7 @@ const tableSchema = new Schema({
       unique: true,
     },
   ],
-  server: [
+  servers: [
     {
       type: mongoose.Types.ObjectId, // server id
       required: true,
@@ -22,6 +31,6 @@ const tableSchema = new Schema({
   ],
 });
 
-const TABLE = tableSchema;
+const TABLE = mongoose.model("Table", tableSchema);
 
 export default TABLE;

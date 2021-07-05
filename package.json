@@ -6,8 +6,10 @@
   "scripts": {
     "start": "node --unhandled-rejections=strict .",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "integration-test": "mocha --exit out/src/**/*.spec.js",
     "prebuild": "npm install && tslint -c tslint.json -p tsconfig.json --fix",
-    "build": "rm -rf js/ && tsc",
+    "build": "rm -r out/src out/models && tsc",
+    "build-prod": "npm run build && npm run i-test",
     "prestart": "npm run build",
     "dev": "concurrently \"tsc -w\" \"nodemon out/src/index.js\""
   },
@@ -24,6 +26,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "concurrently": "^6.0.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",
@@ -33,6 +37,7 @@
     "express-winston": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
+    "mocha": "^9.0.2",
     "moment": "^2.29.1",
     "mongoose": "^5.13.2",
     "node-rsa": "^1.1.1",
@@ -41,11 +46,13 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.19",
     "@types/cors": "^2.8.10",
     "@types/debug": "^4.1.5",
     "@types/express": "^4.17.11",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/lodash": "^4.14.170",
+    "@types/mocha": "^8.2.2",
     "@types/node-rsa": "^1.1.0",
     "@types/qrcode": "^1.4.0",
     "source-map-support": "^0.5.19",

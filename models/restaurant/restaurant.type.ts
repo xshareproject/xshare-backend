@@ -9,7 +9,7 @@ export interface Restaurant extends Document {
   name: string;
   address: Address;
   googleMapsAddressLink: string;
-  phoneNumber: String;
+  phoneNumber: string;
   tables: Table[];
   servers: Server[];
   menus: Menu[];

@@ -18,14 +18,14 @@ class TableService {
 
     const newTables: any[] = [];
 
-    tableBody.tables.forEach(async (tableBody: CreateTable) => {
+    tableBody.tables.forEach(async (table: CreateTable) => {
       const newTableId = new mongoose.Types.ObjectId().toHexString();
       const newTableQRCode = await this.generateQRCodeForTable(newTableId);
 
       const newTable = new TABLE({
         QRCode: newTableQRCode,
         tableId: newTableId,
-        tableNumber: tableBody.tableNumber,
+        tableNumber: table.tableNumber,
       });
 
       newTables.push(newTable);
@@ -54,30 +54,28 @@ class TableService {
     tableId: string,
     serverIds: string[]
   ): Promise<number> {
-    const update: Table = await TABLE.findByIdAndUpdate(
-      tableId,
-      {
-        $push: { servers: { $each: serverIds } },
-      },
-      { new: true }
-    );
+    const query: mongoose.Query<Restaurant, Restaurant> = RESTAURANT.find();
 
-    return serverIds.length;
+    const valuesChanged = await query
+      .where({ tables: { _id: tableId } })
+      .update({ $push: { tables: { $each: serverIds } } })
+      .exec();
+
+    return valuesChanged.nModified;
   }
 
   async removeServersFromTable(
     tableId: string,
     serverIds: string[]
   ): Promise<number> {
-    const update: Table = await TABLE.findByIdAndUpdate(
-      tableId,
-      {
-        $pull: { servers: { $each: serverIds } },
-      },
-      { new: true }
-    );
+    const query: mongoose.Query<Restaurant, Restaurant> = RESTAURANT.find();
 
-    return serverIds.length;
+    const valuesChanged = await query
+      .where({ tables: { _id: tableId } })
+      .update({ $pull: { tables: { $each: serverIds } } })
+      .exec();
+
+    return valuesChanged.nModified;
   }
 }
 
